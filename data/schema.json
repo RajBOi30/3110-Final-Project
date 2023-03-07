@@ -1,0 +1,45 @@
+{
+    "type": "object",
+    "properties": {
+        "listings": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "listing id": {
+                        "type": "integer"
+                    },
+                    "user id": {
+                        "type": "integer"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "price": {
+                        "type": "float"
+                    }
+                },
+                "required": [
+                    "listing id",
+                    "user id",
+                    "username",
+                    "title",
+                    "description",
+                    "price"
+                ]
+            }
+        }
+    },
+    "required": [
+        "listings"
+    ]
+}

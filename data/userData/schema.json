@@ -1,0 +1,33 @@
+{
+    "type": "object",
+    "properties": {
+        "users": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "user id": {
+                        "type": "integer"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "listings": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "required": [
+                    "user id",
+                    "username",
+                    "listings"
+                ]
+            }
+        }
+    },
+    "required": [
+        "users"
+    ]
+}

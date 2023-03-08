@@ -23,6 +23,14 @@
             "title": "Glasses",
             "description": "-8.5 eyesight glasses",
             "price": "69.00"
+        },
+        {
+            "listing id": 4,
+            "user id ": 3,
+            "username": "Kaylin",
+            "title": "Phone Case",
+            "description": "Blue iPhone 14 case",
+            "price": "6.00"
         }
     ]
 }

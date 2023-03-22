@@ -1,0 +1,12 @@
+Use this command to install the packages required to run this program: 
+
+$ opam install ANSITerminal
+$ opam install yojson
+
+Use this command to build the program: 
+
+$make build 
+
+To start the program (enter the marketplace) use this command:
+
+$ make play 

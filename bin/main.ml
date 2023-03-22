@@ -35,7 +35,7 @@ let rec welcome_page () =
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
-  print_string "\n\nWelcome to Goofy Market!";
+  print_string "\n\nWelcome to Goofy Marketplace!";
   welcome_page ()
 
 (* Execute the game engine. *)

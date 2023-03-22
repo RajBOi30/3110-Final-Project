@@ -1,6 +1,7 @@
 type command =
-  | Hello
-  | Bye
   | Home
+  | Quit
 
-val read_input : string -> command
+val input_to_list : string -> string list
+
+val parse : string -> string -> command

@@ -19,4 +19,5 @@ let parse input =
   match input_to_list lower with
   | [] -> raise Empty
   | "home" :: t -> Home
+  | "quit" :: t -> Quit
   | _ -> raise Malformed

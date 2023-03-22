@@ -1,13 +1,20 @@
 open Market
 open Command
+open Listing
 
-let rec homepage () = print_string "\n\nHome page: \n\n"
+let data_dir_prefix = "data" ^ Filename.dir_sep
+
+let feed =
+  feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+
+let rec homepage () =
+  print_string (print_feed "\n\nHere are the latests posts:\n" feed)
 
 let rec welcome_page () =
   print_string
     "\n\n\nPlease enter a command (such as 'main') to get started.\n\n";
   try
-    match read_input (read_line ()) with
+    match parse (read_line ()) with
     | Home -> homepage ()
     | _ ->
         print_string "This command is invalid, or has not yet been i";

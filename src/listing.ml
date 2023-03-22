@@ -6,7 +6,7 @@ type listing = {
   username : string;
   title : string;
   description : string;
-  price : float;
+  price : string;
   date : string;
 }
 
@@ -20,7 +20,7 @@ let listing_from_json json =
     username = json |> member "username" |> to_string;
     title = json |> member "title" |> to_string;
     description = json |> member "description" |> to_string;
-    price = json |> member "price" |> to_float;
+    price = json |> member "price" |> to_string;
     date = json |> member "date" |> to_string;
   }
 
@@ -47,3 +47,15 @@ let get_price x = x.price
 
 (**[get_date] returns the date of listing [x].*)
 let get_date x = x.date
+
+let single_listing listing =
+  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ get_title listing ^ "\n"
+  ^ "Item Description: " ^ get_desc listing ^ "\n" ^ "Listing Price: $"
+  ^ get_price listing ^ "\n" ^ "Posted by: " ^ get_username listing ^ " on "
+  ^ get_date listing ^ "\n"
+
+let rec print_feed acc (lst : f) =
+  match lst.feed with
+  | [] -> acc
+  | [ h ] -> acc ^ single_listing h
+  | h :: t -> print_feed (acc ^ single_listing h) { feed = t }

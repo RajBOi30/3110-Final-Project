@@ -3,5 +3,4 @@ type command =
   | Quit
 
 val input_to_list : string -> string list
-
-val parse : string -> string -> command
+val parse : string -> command

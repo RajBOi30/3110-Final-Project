@@ -19,13 +19,13 @@
                         "type": "string"
                     },
                     "description": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "type": "string"
                     },
                     "price": {
                         "type": "float"
+                    },
+                    "date": {
+                        "type": "string"
                     }
                 },
                 "required": [

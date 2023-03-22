@@ -7,16 +7,16 @@ type command =
 exception Empty
 exception Malformed
 
-(**[input_to_list input] returns a string list of words without spaces in
+(**[input_to_list input] returns a string list of lowercase words without spaces in
    [input].*)
 let input_to_list input =
-  let lst = String.split_on_char ' ' input in
+  let lower = String.lowercase_ascii input in
+  let lst = String.split_on_char ' ' lower in
   List.filter (fun x -> x <> "") lst
 
-(**[parse input] returns a ___ [input].*)
+(**[parse input] returns a command given an [input].*)
 let parse input =
-  let lower = String.lowercase_ascii input in
-  match input_to_list lower with
+  match input_to_list input with
   | [] -> raise Empty
   | "home" :: t -> Home
   | "quit" :: t -> Quit

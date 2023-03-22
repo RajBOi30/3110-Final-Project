@@ -7,25 +7,35 @@ let data_dir_prefix = "data" ^ Filename.dir_sep
 let feed =
   feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
 
+(** [homepage ()] prints out every listing's details such as title, description,
+    price, username, and date. *)
 let homepage () =
   print_string (print_feed "\n\nHere are the latests posts:\n" feed)
 
-let exit () = 
-  print_string "Thanks for stopping by!\n"; exit 0
-  
+(** [exit ()] quits the program. *)
+let exit () =
+  print_string "Thanks for stopping by!\n";
+  exit 0
+
+(** [welcome_page ()] prompts the user for an input and matches it with a
+    command. *)
 let rec welcome_page () =
   print_string
     "\n\n\nPlease enter a command (such as 'main') to get started.\n\n";
   try
     match parse (read_line ()) with
-    | Home -> homepage (); welcome_page()
+    | Home ->
+        homepage ();
+        welcome_page ()
     | Quit -> exit ()
   with _ ->
-    print_string "This command is invalid, or has not yet been j";
+    print_string "This command is invalid, or has not yet been implemented";
     welcome_page ()
 
+(** [main ()] prompts for the game to play, then starts it. *)
 let main () =
   print_string "\n\nWelcome to Goofy Market!";
   welcome_page ()
 
+(* Execute the game engine. *)
 let () = main ()

@@ -50,7 +50,7 @@ let get_date x = x.date
 
 let single_listing listing =
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ get_title listing ^ "\n"
-  ^ "Item Description: " ^ get_desc listing ^ "\n" ^ "Listing Price: $"
+  ^ "Item Description: " ^ get_desc listing ^ "\n" ^ "Price: $"
   ^ get_price listing ^ "\n" ^ "Posted by: " ^ get_username listing ^ " on "
   ^ get_date listing ^ "\n"
 

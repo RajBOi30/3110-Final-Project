@@ -10,7 +10,7 @@ let feed =
 (** [homepage ()] prints out every listing's details such as title, description,
     price, username, and date. *)
 let homepage () =
-  print_string (print_feed "\n\nHere are the latests posts:\n" feed)
+  print_string (print_feed "\n\nHere are the latest listings:\n" feed)
 
 (** [exit ()] quits the program. *)
 let exit () =
@@ -21,7 +21,8 @@ let exit () =
     command. *)
 let rec welcome_page () =
   print_string
-    "\n\n\nPlease enter a command (such as 'main') to get started.\n\n";
+    "\n\n\n\
+     Please enter a command (such as 'home') to explore the marketplace.\n\n";
   try
     match parse (read_line ()) with
     | Home ->

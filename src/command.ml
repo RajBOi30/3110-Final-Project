@@ -1,3 +1,5 @@
+type object_phrase = string list
+
 type command =
   | Hello
   | Bye

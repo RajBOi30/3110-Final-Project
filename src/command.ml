@@ -1,12 +1,17 @@
 type object_phrase = string list
+type command = 
+| Home
+| Quit
 
-type command =
-  | Hello
-  | Bye
-  | Home
+exception Empty
+exception Malformed
 
-let read_input input =
-  let lower = String.lowercase_ascii input in
-  match lower with
-  | "home" -> Home
-  | _ -> Bye
+let input_to_list input =
+  let lst = String.split_on_char ' ' input in
+  List.filter (fun x -> x <> "") lst
+
+let parse input =
+  match input_to_list input with
+  | [] -> raise Empty
+  | h :: t when h = "home" && List.length t == 0 -> Printf.printf "Result: %s\n"
+  | _ -> raise Malformed

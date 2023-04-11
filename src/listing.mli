@@ -8,3 +8,5 @@ val feed_from_json : Yojson.Basic.t -> f
     a valid JSON listings feed representation. *)
 
 val print_feed : string -> f -> string
+
+val print_myfeed : string -> f -> string

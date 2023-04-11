@@ -17,11 +17,14 @@ let exit () =
   print_string "Thanks for stopping by!\n";
   exit 0
 
+let my_listings () =
+  print_string (print_myfeed "\n\nHere are your current listings:\n" feed)
+
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)
 let rec welcome_page () =
   print_string
-    "\n\n\n\
+    "\n\n\
      Please enter a command (such as 'home') to explore the marketplace.\n\n";
   try
     match parse (read_line ()) with
@@ -29,6 +32,9 @@ let rec welcome_page () =
         homepage ();
         welcome_page ()
     | Quit -> exit ()
+    | MyListing ->
+        my_listings ();
+        welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";
     welcome_page ()

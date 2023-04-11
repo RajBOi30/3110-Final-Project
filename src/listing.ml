@@ -59,3 +59,12 @@ let rec print_feed acc (lst : f) =
   | [] -> acc
   | [ h ] -> acc ^ single_listing h
   | h :: t -> print_feed (acc ^ single_listing h) { feed = t }
+
+let rec print_myfeed acc (lst : f) =
+  match lst.feed with
+  | [] -> acc
+  | [ h ] -> if get_user_id h == 1 then acc ^ single_listing h else acc
+  | h :: t ->
+      if get_user_id h == 1 then
+        print_myfeed (acc ^ single_listing h) { feed = t }
+      else print_myfeed acc { feed = t }

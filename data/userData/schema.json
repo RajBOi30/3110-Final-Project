@@ -12,6 +12,12 @@
                     "username": {
                         "type": "string"
                     },
+                    "saved": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
                     "listings": {
                         "type": "array",
                         "items": {
@@ -22,6 +28,7 @@
                 "required": [
                     "user id",
                     "username",
+                    "saved",
                     "listings"
                 ]
             }

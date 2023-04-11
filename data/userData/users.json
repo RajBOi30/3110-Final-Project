@@ -3,6 +3,7 @@
         {
             "user id": 1,
             "username": "RajSinha999",
+            "saved": [],
             "listings": [
                 1,
                 2
@@ -11,11 +12,15 @@
         {
             "user id": 2,
             "username": "KevinLin21733",
+            "saved": [],
             "listings": []
         },
         {
             "user id": 3,
             "username": "Kaylin",
+            "saved": [
+                2
+            ],
             "listings": [
                 3,
                 4

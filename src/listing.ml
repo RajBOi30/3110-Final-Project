@@ -8,6 +8,7 @@ type listing = {
   description : string;
   price : string;
   date : string;
+  likes : int;
 }
 
 type f = { feed : listing list }
@@ -22,6 +23,7 @@ let listing_from_json json =
     description = json |> member "description" |> to_string;
     price = json |> member "price" |> to_string;
     date = json |> member "date" |> to_string;
+    likes = json |> member "likes" |> to_int;
   }
 
 let feed_from_json json : f =
@@ -48,11 +50,16 @@ let get_price x = x.price
 (**[get_date] returns the date of listing [x].*)
 let get_date x = x.date
 
+(**[get_likes] returns the number of likes on listing [x].*)
+let get_likes x = x.likes
+
 let single_listing listing =
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ get_title listing ^ "\n"
   ^ "Item Description: " ^ get_desc listing ^ "\n" ^ "Price: $"
   ^ get_price listing ^ "\n" ^ "Posted by: " ^ get_username listing ^ " on "
-  ^ get_date listing ^ "\n"
+  ^ get_date listing ^ "\n" ^ "Likes: "
+  ^ string_of_int (get_likes listing)
+  ^ "\n"
 
 let rec print_feed acc (lst : f) =
   match lst.feed with

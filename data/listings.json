@@ -7,7 +7,8 @@
             "title": "Xbox Controller",
             "description": "Used Xbox 1 controller, broken left joystick",
             "price": "13.99",
-            "date": "3/21/23"
+            "date": "3/21/23",
+            "likes": 0
         },
         {
             "listing id": 2,
@@ -16,7 +17,8 @@
             "title": "Kirby Plushie",
             "description": "Used Plushie",
             "price": "4.00",
-            "date": "2/2/23"
+            "date": "2/2/23",
+            "likes": 2
         },
         {
             "listing id": 3,
@@ -25,7 +27,8 @@
             "title": "Glasses",
             "description": "-8.5 eyesight glasses",
             "price": "69.00",
-            "date": "3/3/23"
+            "date": "3/3/23",
+            "likes": 1
         },
         {
             "listing id": 4,
@@ -34,7 +37,8 @@
             "title": "Phone Case",
             "description": "Blue iPhone 14 case",
             "price": "6.00",
-            "date": "3/7/23"
+            "date": "3/7/23",
+            "likes": 2
         }
     ]
 }

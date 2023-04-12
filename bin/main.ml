@@ -1,6 +1,7 @@
 open Market
 open Command
 open Listing
+open Users
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let data_dir_prefix_user = "data/userData" ^ Filename.dir_sep

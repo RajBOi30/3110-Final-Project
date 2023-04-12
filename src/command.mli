@@ -1,6 +1,7 @@
 type command =
   | Home
   | Quit
+  | SignIn
 
 exception Empty
 (** Raised when an empty command is parsed. *)

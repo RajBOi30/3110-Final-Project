@@ -31,10 +31,10 @@ let feed_from_json json : f =
 let get_listing_id x = x.listing_id
 
 (**[get_user_id x] returns the user id of listing [x].*)
-let get_user_id x = x.user_id
+let get_user_id (x : listing) = x.user_id
 
 (**[get_username x] returns the user id of listing [x].*)
-let get_username x = x.username
+let get_username (x : listing) = x.username
 
 (**[get_title] returns the title of listing [x].*)
 let get_title x = x.title

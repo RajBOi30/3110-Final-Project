@@ -4,12 +4,14 @@ type command =
   | Home
   | Quit
   | MyListing
+  | SignIn
+
 
 exception Empty
 exception Malformed
 
-(**[input_to_list input] returns a string list of lowercase words without spaces in
-   [input].*)
+(**[input_to_list input] returns a string list of lowercase words without spaces
+   in [input].*)
 let input_to_list input =
   let lower = String.lowercase_ascii input in
   let lst = String.split_on_char ' ' lower in
@@ -23,4 +25,6 @@ let parse input =
   | "quit" :: t -> Quit
   | "mylistings" :: t -> MyListing
   | "my" :: "listings" :: t -> MyListing
+  | "signin" :: t -> SignIn
+  | "sign" :: "in" :: t -> SignIn
   | _ -> raise Malformed

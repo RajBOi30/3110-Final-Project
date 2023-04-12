@@ -3,7 +3,9 @@ type object_phrase = string list
 type command =
   | Home
   | Quit
+  | MyListing
   | SignIn
+
 
 exception Empty
 exception Malformed
@@ -21,6 +23,8 @@ let parse input =
   | [] -> raise Empty
   | "home" :: t -> Home
   | "quit" :: t -> Quit
+  | "mylistings" :: t -> MyListing
+  | "my" :: "listings" :: t -> MyListing
   | "signin" :: t -> SignIn
   | "sign" :: "in" :: t -> SignIn
   | _ -> raise Malformed

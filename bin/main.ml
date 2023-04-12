@@ -52,6 +52,9 @@ let exit () =
   print_string "Thanks for stopping by!\n";
   exit 0
 
+let my_listings () =
+  print_string (print_myfeed "\n\nHere are your current listings:\n" feed)
+
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)
 let rec welcome_page () =
@@ -64,6 +67,9 @@ let rec welcome_page () =
         homepage ();
         welcome_page ()
     | Quit -> exit ()
+    | MyListing ->
+        my_listings ();
+        welcome_page ()
     | SignIn ->
         signin ();
         welcome_page ()

@@ -60,11 +60,13 @@ let rec print_feed acc (lst : f) =
   | [ h ] -> acc ^ single_listing h
   | h :: t -> print_feed (acc ^ single_listing h) { feed = t }
 
-let rec print_myfeed acc (lst : f) =
-  match lst.feed with
-  | [] -> acc
-  | [ h ] -> if get_user_id h == 1 then acc ^ single_listing h else acc
-  | h :: t ->
-      if get_user_id h == 1 then
-        print_myfeed (acc ^ single_listing h) { feed = t }
-      else print_myfeed acc { feed = t }
+let rec print_myfeed id acc (lst : f) =
+  if id = 0 then "Please sign in to view listings"
+  else
+    match lst.feed with
+    | [] -> acc
+    | [ h ] -> if get_user_id h == id then acc ^ single_listing h else acc
+    | h :: t ->
+        if get_user_id h == id then
+          print_myfeed id (acc ^ single_listing h) { feed = t }
+        else print_myfeed id acc { feed = t }

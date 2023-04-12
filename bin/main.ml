@@ -53,7 +53,7 @@ let exit () =
   exit 0
 
 let my_listings () =
-  print_string (print_myfeed "\n\nHere are your current listings:\n" feed)
+  print_string (print_myfeed user.id "\n\nHere are your current listings:\n" feed)
 
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)

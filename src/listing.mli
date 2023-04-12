@@ -9,4 +9,4 @@ val feed_from_json : Yojson.Basic.t -> f
 
 val print_feed : string -> f -> string
 
-val print_myfeed : string -> f -> string
+val print_myfeed : int -> string -> f -> string

@@ -1,0 +1,28 @@
+{
+    "users": [
+        {
+            "user id": 1,
+            "password": "watermelon",
+            "username": "RajSinha999",
+            "listings": [
+                1,
+                2
+            ]
+        },
+        {
+            "user id": 2,
+            "password": "peaches",
+            "username": "KevinLin21733",
+            "listings": []
+        },
+        {
+            "user id": 3,
+            "password": "tangerine",
+            "username": "Kaylin",
+            "listings": [
+                3,
+                4
+            ]
+        }
+    ]
+}

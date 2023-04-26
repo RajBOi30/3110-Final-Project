@@ -5,7 +5,7 @@ type command =
   | Quit
   | MyListing
   | SignIn
-
+  | SignOut
 
 exception Empty
 exception Malformed
@@ -27,4 +27,6 @@ let parse input =
   | "my" :: "listings" :: t -> MyListing
   | "signin" :: t -> SignIn
   | "sign" :: "in" :: t -> SignIn
+  | "signout" :: t -> SignOut
+  | "sign" :: "out" :: t -> SignOut
   | _ -> raise Malformed

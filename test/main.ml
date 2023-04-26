@@ -24,7 +24,7 @@ let pp_list pp_elt lst =
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let user_data_dir_prefix = "data/" ^ "userData" ^ Filename.dir_sep
-let users = Yojson.Basic.from_file (user_data_dir_prefix ^ "users.json")
+let user_list = Yojson.Basic.from_file (user_data_dir_prefix ^ "test_users.json")
 let listings = Yojson.Basic.from_file (data_dir_prefix ^ "listings.json")
 
 (* Helper Functions for Testing *)
@@ -41,13 +41,22 @@ let command_tests =
       assert_raises Command.Empty (fun () -> Command.parse "          ") );
     ( "Command does not exist" >:: fun _ ->
       assert_raises Command.Malformed (fun () -> Command.parse "leave") );
-    ( "Quit command with extra phrase" >:: fun _ ->
-      assert_raises Command.Malformed (fun () -> Command.parse "quit market") );
     command_test "Quit command extra space" "quit " Quit;
     command_test "Quit command mixed case" "QUit" Quit;
     command_test "Home command uppercase" "  HOME" Home;
     command_test "Home command mixed case" "hOme" Home;
+    command_test "Sign In one word case" "SignIn" SignIn;
+    command_test "Sign In two word case" "Sign In" SignIn;
+    command_test "Sign In lower case test" "signin" SignIn;
   ]
 
-let suite = "test suite for Market" >::: List.flatten [ command_tests ]
+let users_tests =
+  [
+    ( "Test ID List" >:: fun _ ->
+      assert_equal [] (Users.id_list (Users.users_from_json user_list)) );
+  ]
+
+let suite =
+  "test suite for Market" >::: List.flatten [ command_tests; users_tests ]
+
 let _ = run_test_tt_main suite

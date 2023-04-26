@@ -3,6 +3,7 @@ type command =
   | Quit
   | MyListing
   | SignIn
+  | SignOut
 
 exception Empty
 (** Raised when an empty command is parsed. *)

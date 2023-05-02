@@ -4,6 +4,7 @@ type command =
   | MyListing
   | SignIn
   | SignOut
+  | NewListing
 
 exception Empty
 (** Raised when an empty command is parsed. *)

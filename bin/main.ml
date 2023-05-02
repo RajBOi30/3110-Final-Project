@@ -2,6 +2,7 @@ open Market
 open Command
 open Listing
 open Users
+open Sys
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let data_dir_prefix_user = "data/userData" ^ Filename.dir_sep
@@ -19,7 +20,29 @@ type user_rec = {
   mutable username : string;
 }
 
-let user = { id = 0; username = "None" }
+(* let user = { id = 0; username = "None" } *)
+let user = { id = 1; username = "RajSinha999" }
+
+type listing_rec = {
+  mutable listing_id : int;
+  mutable user_id : int;
+  mutable username : string;
+  mutable title : string;
+  mutable description : string;
+  mutable price : string;
+  mutable date : string;
+}
+
+let listing =
+  {
+    listing_id = 999;
+    user_id = 999;
+    username = "NONE";
+    title = "NONE";
+    description = "NONE";
+    price = "NONE";
+    date = "NONE";
+  }
 
 (** [homepage ()] prints out every listing's details such as title, description,
     price, username, and date. *)
@@ -70,6 +93,36 @@ let my_listings () =
   print_string
     (print_myfeed user.id "\n\nHere are your current listings:\n" feed)
 
+let new_listing () =
+  if user.id = 0 then
+    print_string "\n\n\nPlease sign in to make a listing.\n\n\n"
+  else begin
+    print_string "\n\n\nWhat is the title of your new listing?\n\n";
+    listing.title <- read_line ();
+    print_string "\n\n\nMake a description for the listing: \n\n";
+    listing.description <- read_line ();
+    print_string
+      "\n\n\nWhen would you like to post this listing? (MM/DD/YY) \n\n";
+    listing.date <- read_line ();
+    print_string "\n\nWhat is the price of this item? \n\n";
+    print_string "$";
+    listing.price <- read_line ();
+    print_string "\n\nHere is what your listing looks like:\n\n";
+    listing.username <- user.username;
+    listing.user_id <- user.id;
+    print_string
+      ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ listing.title ^ "\n"
+     ^ "Item Description: " ^ listing.description ^ "\n" ^ "Price: $"
+     ^ listing.price ^ "\n" ^ "Posted by: " ^ listing.username ^ " on "
+     ^ listing.date ^ "\n" ^ "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
+    print_string "Do you want to post this listing? (Y or N)\n\n";
+    let decision = read_line () in
+    match decision with
+    | "Y" | "y" -> print_string "\n\nSuccess! Your post has been made. \n\n\n"
+    (* update the json file, and the user's post count*)
+    | _ -> print_string "\n\nOk, the post has been discarded.\n\n\n"
+  end
+
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)
 let rec welcome_page () =
@@ -91,6 +144,9 @@ let rec welcome_page () =
         welcome_page ()
     | SignOut ->
         signout ();
+        welcome_page ()
+    | NewListing ->
+        new_listing ();
         welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";

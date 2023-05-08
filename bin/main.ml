@@ -6,8 +6,8 @@ open Users
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let data_dir_prefix_user = "data/userData" ^ Filename.dir_sep
 
-let feed =
-  feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+(* let feed = feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^
+   "listings.json")) *)
 
 let user_list =
   users_from_json (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
@@ -23,7 +23,7 @@ let user = { id = 0; username = "None" }
 
 (** [homepage ()] prints out every listing's details such as title, description,
     price, username, and date. *)
-let homepage () =
+let homepage feed =
   print_string (print_feed "\n\nHere are the latest listings:\n" feed)
 
 let signin () =
@@ -66,13 +66,16 @@ let exit () =
   print_string "Thanks for stopping by!\n";
   exit 0
 
-let my_listings () =
+let my_listings feed =
   print_string
     (print_myfeed user.id "\n\nHere are your current listings:\n" feed)
 
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)
 let rec welcome_page () =
+  let feed =
+    feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+  in
   print_string
     ("\n\n\
       Please enter a command (such as 'home') to explore the marketplace. \
@@ -80,17 +83,21 @@ let rec welcome_page () =
   try
     match parse (read_line ()) with
     | Home ->
-        homepage ();
+        homepage feed;
         welcome_page ()
     | Quit -> exit ()
     | MyListing ->
-        my_listings ();
+        my_listings feed;
         welcome_page ()
     | SignIn ->
         signin ();
         welcome_page ()
     | SignOut ->
         signout ();
+        welcome_page ()
+    | Like i ->
+        like_post i feed;
+        print_endline ("You have liked post " ^ string_of_int i ^ ".");
         welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";

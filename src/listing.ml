@@ -8,6 +8,7 @@ type listing = {
   description : string;
   price : string;
   date : string;
+  likes : int;
 }
 
 type f = { feed : listing list }
@@ -22,10 +23,35 @@ let listing_from_json json =
     description = json |> member "description" |> to_string;
     price = json |> member "price" |> to_string;
     date = json |> member "date" |> to_string;
+    likes = json |> member "likes" |> to_int;
   }
 
 let feed_from_json json : f =
   { feed = json |> member "listings" |> to_list |> List.map listing_from_json }
+
+let to_yojson p : Yojson.Basic.t =
+  `Assoc
+    [
+      ("listing id", `Int p.listing_id);
+      ("user id", `Int p.user_id);
+      ("username", `String p.username);
+      ("title", `String p.title);
+      ("description", `String p.description);
+      ("price", `String p.price);
+      ("date", `String p.date);
+      ("likes", `Int p.likes);
+    ]
+
+let file_path = "data/listings.json"
+
+let save_to_json ({ feed } : f) =
+  let json_output post_list : Yojson.Basic.t =
+    `Assoc [ ("listings", `List (List.map to_yojson post_list)) ]
+  in
+  let yojson_post = json_output feed in
+  let oc = open_out file_path in
+  Yojson.Basic.to_channel oc yojson_post;
+  close_out oc
 
 (**[get_listing_id x] returns the listing id of listing [x].*)
 let get_listing_id x = x.listing_id
@@ -48,11 +74,17 @@ let get_price x = x.price
 (**[get_date] returns the date of listing [x].*)
 let get_date x = x.date
 
+let get_likes x = x.likes
+
 let single_listing listing =
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ get_title listing ^ "\n"
-  ^ "Item Description: " ^ get_desc listing ^ "\n" ^ "Price: $"
+  ^ "ID: "
+  ^ string_of_int (get_listing_id listing)
+  ^ "\n" ^ "Item Description: " ^ get_desc listing ^ "\n" ^ "Price: $"
   ^ get_price listing ^ "\n" ^ "Posted by: " ^ get_username listing ^ " on "
-  ^ get_date listing ^ "\n"
+  ^ get_date listing ^ "\n" ^ "Likes: "
+  ^ string_of_int (get_likes listing)
+  ^ "\n"
 
 let rec print_feed acc (lst : f) =
   match lst.feed with
@@ -70,3 +102,10 @@ let rec print_myfeed id acc (lst : f) =
         if get_user_id h == id then
           print_myfeed id (acc ^ single_listing h) { feed = t }
         else print_myfeed id acc { feed = t }
+
+let like_post (i : int) (feed : f) =
+  let update p =
+    if p.listing_id = i then { p with likes = p.likes + 1 } else p
+  in
+  let new_feed = List.map update feed.feed in
+  save_to_json { feed = new_feed }

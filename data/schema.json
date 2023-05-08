@@ -1,45 +1,48 @@
 {
-    "type": "object",
-    "properties": {
-        "listings": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "listing id": {
-                        "type": "integer"
-                    },
-                    "user id": {
-                        "type": "integer"
-                    },
-                    "username": {
-                        "type": "string"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "price": {
-                        "type": "float"
-                    },
-                    "date": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "listing id",
-                    "user id",
-                    "username",
-                    "title",
-                    "description",
-                    "price"
-                ]
-            }
-        }
-    },
-    "required": [
-        "listings"
-    ]
+  "type": "object",
+  "properties": {
+    "listings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "listing id": {
+            "type": "integer"
+          },
+          "user id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "float"
+          },
+          "date": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "listing id",
+          "user id",
+          "username",
+          "title",
+          "description",
+          "price",
+          "date",
+          "likes"
+        ]
+      }
+    }
+  },
+  "required": ["listings"]
 }

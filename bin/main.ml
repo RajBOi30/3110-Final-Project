@@ -20,7 +20,7 @@ type user_rec = {
   mutable username : string;
 }
 
-let user = { id = 0; username = "NONE" }
+let user = { id = 0; username = "None" }
 
 (** [homepage ()] prints out every listing's details such as title, description,
     price, username, and date. *)
@@ -45,10 +45,24 @@ let signin () =
          ^ user.username ^ "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))
       else
         print_string
-          "That username password combination does not match, returning to \
-           home screen.")
-    else print_string "User ID not found, returning to home screen."
-  else print_string "User is already authenticated"
+          "\n\n\
+           That username password combination does not match, returning to \
+           home screen.\n\n\n")
+    else print_string "\n\nUser ID not found, returning to home screen.\n\n\n"
+  else print_string "\n\n\nUser is already authenticated\n\n\n"
+
+let signout () =
+  if user.id = 0 then print_string "\n\n\nThere is no user signed in.\n\n\n"
+  else print_string "\n\nAre you sure you want to log out (Y or N)?\n\n\n";
+  let decision = read_line () in
+  match decision with
+  | "Y" | "y" ->
+      print_string
+        ("\n\nSuccessfully signed out user: " ^ user.username ^ ".\n\n\n");
+      user.id <- 0;
+      user.username <- "None"
+  | _ ->
+      print_string "\n\nYou have not been signed out. Returning to Home.\n\n\n"
 
 (** [exit ()] quits the program. *)
 let exit () =
@@ -62,8 +76,9 @@ let my_listings () =
     command. *)
 let rec welcome_page () =
   print_string
-    "\n\n\
-     Please enter a command (such as 'home') to explore the marketplace.\n\n";
+    ("\n\n\
+      Please enter a command (such as 'home') to explore the marketplace.\n\
+      (Current User: " ^ user.username ^ ")\n\n");
   try
     match parse (read_line ()) with
     | Home ->
@@ -76,9 +91,20 @@ let rec welcome_page () =
     | SignIn ->
         signin ();
         welcome_page ()
+    | SignOut ->
+        signout ();
+        welcome_page ()
+    | Like i ->
+        like_post i feed;
+        print_endline ("You have liked post " ^ string_of_int i ^ ".");
+        welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";
     welcome_page ()
+
+type state = { user : user_rec }
+
+let get_state = { user }
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

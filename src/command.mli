@@ -3,6 +3,8 @@ type command =
   | Quit
   | MyListing
   | SignIn
+  | SignOut
+  | Like of int
 
 exception Empty
 (** Raised when an empty command is parsed. *)

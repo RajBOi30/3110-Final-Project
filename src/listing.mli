@@ -11,3 +11,4 @@ val save_to_json : f -> unit
 val print_feed : string -> f -> string
 val print_myfeed : int -> string -> f -> string
 val like_post : int -> f -> unit
+val post : int -> string -> f -> unit

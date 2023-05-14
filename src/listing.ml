@@ -52,7 +52,6 @@ let save_to_json ({ feed } : f) =
   let oc = open_out file_path in
   Yojson.Basic.to_channel oc yojson_post;
   close_out oc
-
 (**[get_listing_id x] returns the listing id of listing [x].*)
 let get_listing_id x = x.listing_id
 
@@ -109,3 +108,46 @@ let like_post (i : int) (feed : f) =
   in
   let new_feed = List.map update feed.feed in
   save_to_json { feed = new_feed }
+
+let post (user_id : int) (username : string) (feed : f) =
+  if user_id <> 0 then (
+    print_string "\nPlease enter the title of your post:\n";
+    let title = read_line () in
+
+    print_string "\nPlease enter the description of your post:\n";
+    let description = read_line () in
+
+    print_string
+      "\nPlease enter the price of your post in the format \"0.00\":\n";
+    let price = read_line () in
+
+    print_string
+      "\nPlease enter the date of your post in the format \"DD/MM/YY\":\n";
+    let date = read_line () in
+    let existing_json =
+      try Yojson.Basic.from_file file_path
+      with _ -> `Assoc [ ("listings", `List []) ]
+    in
+    let existing_feed = feed_from_json existing_json in
+
+    let get_max_id feed =
+      List.fold_left (fun acc listing -> max acc listing.listing_id) 0 feed
+    in
+
+    let new_listing =
+      {
+        listing_id = get_max_id existing_feed.feed + 1;
+        user_id;
+        username;
+        title;
+        description;
+        price;
+        date;
+        likes = 0;
+      }
+    in
+    let updated_feed = { feed = existing_feed.feed @ [ new_listing ] } in
+    save_to_json updated_feed;
+
+    print_string "\nPost created successfully!\n")
+  else print_string "\nYou need to sign in to create a post.\n"

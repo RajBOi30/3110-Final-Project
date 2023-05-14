@@ -28,12 +28,12 @@ let homepage () =
   print_string (print_feed "\nHere are the latest listings:\n" feed)
 
 let signin () =
-  print_string "Please enter your user id.\n\n";
+  print_string "\nPlease enter your user id.\n\n";
   if user.id = 0 then
     let entered_id = read_line () in
     let num = int_of_string entered_id in
     if List.mem num ids then (
-      print_string "Please enter your password.\n\n";
+      print_string "\nPlease enter your password.\n\n";
 
       let password = read_line () in
 
@@ -45,24 +45,21 @@ let signin () =
          ^ user.username ^ "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))
       else
         print_string
-          "\n\n\
-           That username password combination does not match, returning to \
-           home screen.\n\n\n")
-    else print_string "\n\nUser ID not found, returning to home screen.\n\n\n"
-  else print_string "\n\n\nUser is already authenticated\n\n\n"
+          "That username password combination does not match, returning to \
+           home screen.\n")
+    else print_string "\nUser ID not found, returning to home screen.\n"
+  else print_string "\nUser is already authenticated\n"
 
 let signout () =
-  if user.id = 0 then print_string "\n\n\nThere is no user signed in.\n\n\n"
-  else print_string "\n\nAre you sure you want to log out (Y or N)?\n\n\n";
+  if user.id = 0 then print_string "\nThere is no user signed in.\n"
+  else print_string "\nAre you sure you want to log out (Y or N)?\n";
   let decision = read_line () in
   match decision with
   | "Y" | "y" ->
-      print_string
-        ("\n\nSuccessfully signed out user: " ^ user.username ^ ".\n\n\n");
+      print_string ("\nSuccessfully signed out user: " ^ user.username ^ ".\n");
       user.id <- 0;
       user.username <- "None"
-  | _ ->
-      print_string "\n\nYou have not been signed out. Returning to Home.\n\n\n"
+  | _ -> print_string "\n\nYou have not been signed out. Returning to Home.\n"
 
 (** [exit ()] quits the program. *)
 let exit () =

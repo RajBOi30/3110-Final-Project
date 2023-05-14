@@ -15,19 +15,20 @@ type f = { feed : listing list }
 
 (* Helper function for feed_from_json *)
 let listing_from_json json =
-  {
-    listing_id = json |> member "listing id" |> to_int;
-    user_id = json |> member "user id" |> to_int;
-    username = json |> member "username" |> to_string;
-    title = json |> member "title" |> to_string;
-    description = json |> member "description" |> to_string;
-    price = json |> member "price" |> to_string;
-    date = json |> member "date" |> to_string;
-    likes = json |> member "likes" |> to_int;
-  }
+  let listing_id = json |> member "listing id" |> to_int in
+  let user_id = json |> member "user id" |> to_int in
+  let username = json |> member "username" |> to_string in
+  let title = json |> member "title" |> to_string in
+  let description = json |> member "description" |> to_string in
+  let price = json |> member "price" |> to_string in
+  let date = json |> member "date" |> to_string in
+  let likes = json |> member "likes" |> to_int in
+  { listing_id; user_id; username; title; description; price; date; likes }
 
 let feed_from_json json : f =
-  { feed = json |> member "listings" |> to_list |> List.map listing_from_json }
+  let listings_json = json |> member "listings" in
+  let listings = listings_json |> to_list |> List.map listing_from_json in
+  { feed = listings }
 
 let to_yojson p : Yojson.Basic.t =
   `Assoc
@@ -44,6 +45,7 @@ let to_yojson p : Yojson.Basic.t =
 
 let file_path = "data/listings.json"
 
+(**[get_listing_id x] returns the listing id of listing [x].*)
 let save_to_json ({ feed } : f) =
   let json_output post_list : Yojson.Basic.t =
     `Assoc [ ("listings", `List (List.map to_yojson post_list)) ]
@@ -52,7 +54,7 @@ let save_to_json ({ feed } : f) =
   let oc = open_out file_path in
   Yojson.Basic.to_channel oc yojson_post;
   close_out oc
-(**[get_listing_id x] returns the listing id of listing [x].*)
+
 let get_listing_id x = x.listing_id
 
 (**[get_user_id x] returns the user id of listing [x].*)
@@ -76,14 +78,17 @@ let get_date x = x.date
 let get_likes x = x.likes
 
 let single_listing listing =
-  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ get_title listing ^ "\n"
-  ^ "ID: "
-  ^ string_of_int (get_listing_id listing)
-  ^ "\n" ^ "Item Description: " ^ get_desc listing ^ "\n" ^ "Price: $"
-  ^ get_price listing ^ "\n" ^ "Posted by: " ^ get_username listing ^ " on "
-  ^ get_date listing ^ "\n" ^ "Likes: "
-  ^ string_of_int (get_likes listing)
-  ^ "\n"
+  let title = get_title listing in
+  let listing_id = get_listing_id listing in
+  let description = get_desc listing in
+  let price = get_price listing in
+  let username = get_username listing in
+  let date = get_date listing in
+  let likes = get_likes listing in
+  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ "Title: " ^ title ^ "\n"
+  ^ "ID: " ^ string_of_int listing_id ^ "\n" ^ "Item Description: "
+  ^ description ^ "\n" ^ "Price: $" ^ price ^ "\n" ^ "Posted by: " ^ username
+  ^ " on " ^ date ^ "\n" ^ "Likes: " ^ string_of_int likes ^ "\n"
 
 let rec print_feed acc (lst : f) =
   match lst.feed with

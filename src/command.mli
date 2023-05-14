@@ -6,6 +6,7 @@ type command =
   | SignOut
   | Like of int
   | Help
+  | Post
 
 exception Empty
 (** Raised when an empty command is parsed. *)

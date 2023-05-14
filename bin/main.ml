@@ -109,6 +109,9 @@ let rec welcome_page () =
     | Help ->
         help ();
         welcome_page ()
+    | Post ->
+        post user.id user.username feed;
+        welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";
     welcome_page ()

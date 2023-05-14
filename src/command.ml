@@ -8,6 +8,7 @@ type command =
   | SignOut
   | Like of int
   | Help
+  | Post
 
 exception Empty
 exception Malformed
@@ -32,6 +33,7 @@ let parse input =
   | "signout" :: t -> SignOut
   | "sign" :: "out" :: t -> SignOut
   | "help" :: t -> Help
+  | "post" :: t -> Post
   | "like" :: t -> begin
       match t with
       | [ x ] -> ( try Like (int_of_string x) with _ -> raise Malformed)

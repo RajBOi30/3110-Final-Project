@@ -2,6 +2,7 @@ open Market
 open Command
 open Listing
 open Users
+open Yojson
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let data_dir_prefix_user = "data/userData" ^ Filename.dir_sep
@@ -24,22 +25,24 @@ let user = { id = 0; username = "NONE" }
 (** [homepage ()] prints out every listing's details such as title, description,
     price, username, and date. *)
 let homepage () =
-  print_string (print_feed "\n\nHere are the latest listings:\n" feed)
+  print_string (print_feed "\nHere are the latest listings:\n" feed)
 
 let signin () =
-  print_string "\n\nPlease enter your user id.\n\n\n";
+  print_string "Please enter your user id.\n\n";
   if user.id = 0 then
     let entered_id = read_line () in
     let num = int_of_string entered_id in
     if List.mem num ids then (
-      print_string "\n\nPlease enter your password.\n\n\n";
+      print_string "Please enter your password.\n\n";
 
       let password = read_line () in
 
       if password = get_pass_from_id num user_list then (
         user.id <- num;
         user.username <- get_uname_from_id num user_list;
-        print_string ("\n\nWelcome User " ^ user.username))
+        print_string
+          ("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nWelcome User "
+         ^ user.username ^ "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))
       else
         print_string
           "That username password combination does not match, returning to \
@@ -53,7 +56,7 @@ let exit () =
   exit 0
 
 let my_listings () =
-  print_string (print_myfeed user.id "\n\nHere are your current listings:\n" feed)
+  print_string (print_myfeed user.id "\nHere are your current listings:\n" feed)
 
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)

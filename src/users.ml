@@ -36,6 +36,14 @@ let get_uname_from_id (id : int) (lst : u) =
   in
   helper id lst.users
 
+let get_id_from_uname (uname : string) (lst : u) =
+  let rec helper (uname : string) (users : user list) =
+    match users with
+    | [] -> raise Not_found
+    | h :: t -> if h.username = uname then h.user_id else helper uname t
+  in
+  helper uname lst.users
+
 let get_pass_from_id (id : int) (lst : u) =
   let rec helper (id : int) (users : user list) =
     match users with

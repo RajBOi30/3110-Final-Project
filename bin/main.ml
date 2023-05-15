@@ -208,6 +208,7 @@ let rec welcome_page () =
         welcome_page ()
     | Post ->
         post user.id user.username feed;
+        update_user_listings !max_id user.id user_list;
         welcome_page ()
     | Reviews ->
         review ();

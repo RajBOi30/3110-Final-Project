@@ -12,6 +12,11 @@ type listing = {
   reviews : string list;
 }
 
+type max_listing_id = { mutable postid : int }
+
+let max_listing = { postid = 3 }
+let max_id = ref 3
+
 type f = { feed : listing list }
 
 (* Helper function for feed_from_json *)
@@ -290,7 +295,8 @@ let post (user_id : int) (username : string) (feed : f) =
     in
     let updated_feed = { feed = existing_feed.feed @ [ new_listing ] } in
     save_to_json updated_feed;
-
+    (* max_listing.postid <- new_listing.listing_id; *)
+    max_id := new_listing.listing_id;
     print_string "\nPost created successfully!\n")
   else print_string "\nYou need to sign in to create a post.\n"
 

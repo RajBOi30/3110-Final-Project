@@ -2,6 +2,7 @@ type f
 (** The abstract type of the feed. *)
 
 type listing
+type max_listing_id
 
 val feed_from_json : Yojson.Basic.t -> f
 (** [feed_from_json j] is the market feed that [j] represents. Requires: [j] is
@@ -33,3 +34,5 @@ val print_reviews : listing -> string
 val add_review : listing -> string -> unit
 val listing_from_json : Yojson.Basic.t -> listing
 val print_feed_by_id : int list -> string -> f -> string
+val max_listing : max_listing_id
+val max_id : int ref

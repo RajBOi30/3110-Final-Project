@@ -222,3 +222,16 @@ let view_users { users } =
       print_endline ("Following: " ^ following);
       print_endline "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     users
+
+let update_user_listings user_id listing_id { users } =
+  let updated_users =
+    List.map
+      (fun u ->
+        if u.user_id = user_id then
+          let updated_listings = listing_id :: u.listings in
+          { u with listings = updated_listings }
+        else u)
+      users
+  in
+  let updated_user_list = { users = updated_users } in
+  save_to_users updated_user_list

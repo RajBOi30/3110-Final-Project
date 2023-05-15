@@ -9,6 +9,7 @@ type listing = {
   price : string;
   date : string;
   likes : int;
+  reviews : string list;
 }
 
 type f = { feed : listing list }
@@ -23,7 +24,18 @@ let listing_from_json json =
   let price = json |> member "price" |> to_string in
   let date = json |> member "date" |> to_string in
   let likes = json |> member "likes" |> to_int in
-  { listing_id; user_id; username; title; description; price; date; likes }
+  let reviews = json |> member "reviews" |> to_list |> List.map to_string in
+  {
+    listing_id;
+    user_id;
+    username;
+    title;
+    description;
+    price;
+    date;
+    likes;
+    reviews;
+  }
 
 let feed_from_json json : f =
   let listings_json = json |> member "listings" in
@@ -41,6 +53,7 @@ let to_yojson p : Yojson.Basic.t =
       ("price", `String p.price);
       ("date", `String p.date);
       ("likes", `Int p.likes);
+      ("reviews", `List (List.map (fun s -> `String s) p.reviews));
     ]
 
 let file_path = "data/listings.json"
@@ -76,6 +89,7 @@ let get_price x = x.price
 let get_date x = x.date
 
 let get_likes x = x.likes
+let get_reviews x = x.reviews
 
 let get_listing (x : int) (lst : f) =
   List.find (fun a -> a.listing_id = x) lst.feed
@@ -114,7 +128,6 @@ let rec print_myfeed id acc (lst : f) =
         if get_user_id h == id then
           print_myfeed id (acc ^ single_listing h) { feed = t }
         else print_myfeed id acc { feed = t }
-
 
 let rec print_feed_by_id (id_list : int list) acc (lst : f) =
   match lst.feed with
@@ -155,6 +168,7 @@ let archive_listing (listing : listing) =
           price = post.price;
           date = post.date;
           likes = post.likes;
+          reviews = post.reviews;
         }
     | _ -> post
   in
@@ -264,6 +278,7 @@ let post (user_id : int) (username : string) (feed : f) =
         price;
         date;
         likes = 0;
+        reviews = [];
       }
     in
     let updated_feed = { feed = existing_feed.feed @ [ new_listing ] } in
@@ -271,3 +286,27 @@ let post (user_id : int) (username : string) (feed : f) =
 
     print_string "\nPost created successfully!\n")
   else print_string "\nYou need to sign in to create a post.\n"
+
+let review_printer acc r = "\"" ^ r ^ "\"\n" ^ acc
+
+let print_reviews listing =
+  if List.length listing.reviews < 1 then
+    "There are no reviews yet for this listing. Be the first to review!"
+  else List.fold_left review_printer "" listing.reviews
+
+let add_review listing rev =
+  let existing_json =
+    try Yojson.Basic.from_file file_path
+    with _ -> `Assoc [ ("listings", `List []) ]
+  in
+  let existing_feed = feed_from_json existing_json in
+  let listing_to_update = List.find (fun x -> x = listing) existing_feed.feed in
+  let new_listing =
+    { listing_to_update with reviews = rev :: listing_to_update.reviews }
+  in
+  let new_feed =
+    List.map
+      (fun l -> if l.listing_id = listing.listing_id then new_listing else l)
+      existing_feed.feed
+  in
+  save_to_json { feed = new_feed }

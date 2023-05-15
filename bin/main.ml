@@ -132,9 +132,27 @@ let review () =
     let input_id = read_line () in
     let post_id = int_of_string input_id in
     print_string
-      ("Here are the current reviews for "
+      ("\n\nHere are the current reviews for "
       ^ get_title (get_listing post_id feed)
-      ^ ":")
+      ^ ":\n\n");
+    print_string (print_reviews (get_listing post_id feed));
+    print_string "\n\nDo you want to add a review? (Y or N)\n\n";
+    let decision = read_line () in
+    match decision with
+    | "Y" | "y" -> (
+        print_string "\n\nType your review here:\n\n";
+        let rev = read_line () in
+        print_string
+          ("\nAre sure you want to add this review to "
+          ^ get_title (get_listing post_id feed)
+          ^ "?\n\n" ^ rev ^ "\n\n");
+        let answer = read_line () in
+        match answer with
+        | "Y" | "y" ->
+            add_review (get_listing post_id feed) rev;
+            print_string "\n\nYour review was added!\n\n\n"
+        | _ -> print_string "\n\nOk, disregarding the review\n\n\n")
+    | _ -> print_string "\n\nOk, returning to home.\n\n\n"
   end
   else print_string "\n\n\nPlease sign in to make a review\n\n\n"
 

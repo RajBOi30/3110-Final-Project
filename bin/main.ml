@@ -71,7 +71,7 @@ let my_listings () =
   print_string (print_myfeed user.id "\nHere are your current listings:\n" feed)
 
 let purchase i =
-  if user.id <> 3000 then begin
+  if user.id = 3000 then begin
     let post_id = ref i in
     if !post_id = 0 then (
       print_string
@@ -100,7 +100,8 @@ let purchase i =
     | "Y" | "y" -> print_string "remove from json and decrement money"
     | _ -> print_string "\n\nThe purchase was not made. Returning to Home.\n"
   end
-  else print_string "\n\n\nPlease sign in to make a purchase\n\n\n"
+  else delete_listing (get_listing 1 feed) feed;
+  print_string "\n\n\nPlease sign in to make a purchase\n\n\n"
 
 let help () =
   print_string

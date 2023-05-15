@@ -5,6 +5,7 @@ open Users
 open Command
 open Yojson.Basic.Util
 
+
 (** [pp_string s] pretty-prints string [s]. *)
 let pp_string s = "\"" ^ s ^ "\""
 
@@ -42,6 +43,7 @@ let is_valid_date_test (name : string) (str : string) (expected_output : bool) :
     test =
   name >:: fun _ ->
   assert_equal expected_output (is_valid_date str) ~printer:string_of_bool
+
 
 let test_file = Yojson.Basic.from_file "data/listings.json"
 

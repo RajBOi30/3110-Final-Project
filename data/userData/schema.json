@@ -20,13 +20,27 @@
                         "items": {
                             "type": "integer"
                         }
+                    },
+                    "saved": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "following": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "required": [
                     "user id",
                     "username",
                     "listings",
-                    "password"
+                    "password",
+                    "saved",
+                    "following"
                 ]
             }
         }

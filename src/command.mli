@@ -8,6 +8,12 @@ type command =
   | Purchase of int
   | Help
   | Post
+  | Reviews
+  | Save of int
+  | MySaved
+  | SavedIDs
+  | Follow of string
+  | ViewFollowing
 
 exception Empty
 (** Raised when an empty command is parsed. *)

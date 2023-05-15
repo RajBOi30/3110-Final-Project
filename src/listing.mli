@@ -17,3 +17,5 @@ val get_title : listing -> string
 val delete_listing : listing -> f -> unit
 val like_post : int -> int -> f -> unit
 val post : int -> string -> f -> unit
+val is_valid_price : string -> bool
+val is_valid_date : string -> bool

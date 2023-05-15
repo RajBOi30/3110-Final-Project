@@ -45,7 +45,11 @@ let signin () =
           "\n\
            That username password combination does not match, returning to \
            home screen.\n")
-    else print_string "\nUser ID not found, returning to home screen.\n"
+    else
+      print_string
+        "\n\
+         User ID not found, returning to home screen. Enter VIEW USERS to \
+         check your ID.\n"
   else print_string "\nUser is already authenticated\n"
 
 let signout () =
@@ -104,28 +108,37 @@ let purchase i =
   end
   else print_string "\n\n\nPlease sign in to make a purchase\n\n\n"
 
+let print_bold_text text =
+  print_string "\027[1m";
+  print_string text;
+  print_string "\027[0m";
+  print_newline ()
+
 let help () =
+  print_bold_text "\n\n\nHere is a list of supported commands:";
   print_string
-    "\n\n\n\
-     Here is a list of supported commands:\n\n\
-     Home: Displays the homepage of the app with the most recent listings\n\
-     Quit: Exits the app\n\
-     My Listings: Displays all of your listings (requires a user to be signed \
-     in)\n\
-     Sign in: Allows the user to sign in with their username and password\n\
-     Sign out: Propmts the user to sign out (requires a user to be signed in)\n\
-     Post: Post a listing (requires a user is signed in)\n\
-     Review: View and post reviews for any listing \n\
-     Purchase: Purchase an item that is currently on the market (requires a \
-     user to be signed in)\n\
-     Save:-\n\
-     My Saved:-\n\
-     Saved IDs:-\n\
-     Follow:-\n\
-     View Following:-\n\
-     Create Account:-\n\
-     View Users:-\n\
-     Like: Like a post (requires a user to be signed in)\n\n"
+    "\n\
+     HOME: Displays the homepage of the app with the most recent listings\n\
+     QUIT: Exits the app\n\
+     CREATE ACCOUNT: Create a new account for the marketplace \n\
+     SIGN IN: Sign in to your account with your username and password\n\
+     SIGN OUT: Sign out of your account *must be signed in*\n\
+     POST: Post a listing *must be signed in*\n\
+     MY LISTINGS: Displays all of your listings *must be signed in*\n\
+     REVIEW: View and post reviews for any listing \n\
+     PURCHASE [id]: Purchase an item with ID [id] that is currently on the \
+     market *must be signed in*\n\
+     LIKE [id]: Like a post with ID [id] *must be signed in*\n\
+     SAVE [id]: Save an item with ID [id] that is currently on the market \
+     *must be signed in* \n\
+     MY SAVED: View a list of your saved items *must be signed in* \n\
+     SAVED IDs: View a list of the IDs of your saved items, for a quick look \
+     *must be signed in*\n\
+     FOLLOW [username]: Follow the user with username [username] *must be \
+     signed in*\n\
+     VIEW FOLLOWING: View the current users you are following *must be signed \
+     in* \n\
+     VIEW USERS: View a list of the current users on the platform."
 
 let review () =
   let feed =
@@ -157,7 +170,7 @@ let review () =
         print_string
           ("\nAre sure you want to add this review to "
           ^ get_title (get_listing post_id feed)
-          ^ "?\n\n" ^ rev ^ "\n\n");
+          ^ "? (Y or N)\n\n" ^ rev ^ "\n\n");
         let answer = read_line () in
         match answer with
         | "Y" | "y" ->
@@ -235,7 +248,8 @@ let rec welcome_page () =
         view_users user_list;
         welcome_page ()
   with _ ->
-    print_string "This command is invalid, or has not yet been implemented";
+    print_string
+      "This command is invalid, please enter HELP for a list of commands.";
     welcome_page ()
 
 type state = { user : user_rec }

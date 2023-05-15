@@ -1,6 +1,17 @@
-
 {
     "users": [
+        {
+            "user id": 5,
+            "username": "MickeyMouse",
+            "password": "clubhouse",
+            "listings": [],
+            "saved": [
+                8
+            ],
+            "following": [
+                "peppapig"
+            ]
+        },
         {
             "user id": 4,
             "username": "peppapig",
@@ -13,6 +24,30 @@
                 "rajsinha999",
                 "kaylin"
             ]
+        },
+        {
+            "user id": 3,
+            "username": "Kaylin",
+            "password": "tangerine",
+            "listings": [
+                3,
+                4
+            ],
+            "saved": [
+                2,
+                1,
+                4,
+                3
+            ],
+            "following": []
+        },
+        {
+            "user id": 2,
+            "username": "KevinLin21733",
+            "password": "peaches",
+            "listings": [],
+            "saved": [],
+            "following": []
         },
         {
             "user id": 1,
@@ -30,30 +65,6 @@
                 "kevinlin21733",
                 "kaylin"
             ]
-        },
-        {
-            "user id": 2,
-            "username": "KevinLin21733",
-            "password": "peaches",
-            "listings": [],
-            "saved": [],
-            "following": []
-        },
-        {
-            "user id": 3,
-            "username": "Kaylin",
-            "password": "tangerine",
-            "listings": [
-                3,
-                4
-            ],
-            "saved": [
-                2,
-                1,
-                4,
-                3
-            ],
-            "following": []
         }
     ]
 }

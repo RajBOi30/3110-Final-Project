@@ -200,8 +200,8 @@ let rec create_account { users } =
     save_to_users updated_user_list;
     print_string
       ("User " ^ username
-     ^ " created successfully! Try making your first listing, or find a seller \
-        to follow! \n"))
+     ^ " created successfully! Sign in to make your first listing, or find a \
+        seller to follow! \n"))
 
 let view_users { users } =
   print_endline "\nHere are the current users of Goofy Marketplace:";
@@ -210,7 +210,6 @@ let view_users { users } =
     (fun user ->
       let username = user.username in
       let user_id = user.user_id in
-      let num_listings = List.length user.listings in
       let following =
         match user.following with
         | [] -> "None"
@@ -218,7 +217,6 @@ let view_users { users } =
       in
       print_endline ("Username: " ^ username);
       print_endline ("User ID: " ^ string_of_int user_id);
-      print_endline ("Number of Listings: " ^ string_of_int num_listings);
       print_endline ("Following: " ^ following);
       print_endline "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     users

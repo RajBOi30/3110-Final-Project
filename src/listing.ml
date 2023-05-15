@@ -43,7 +43,7 @@ let to_yojson p : Yojson.Basic.t =
       ("likes", `Int p.likes);
     ]
 
-let file_path = "data/listings copy.json"
+let file_path = "data/listings.json"
 
 (**[get_listing_id x] returns the listing id of listing [x].*)
 let save_to_json ({ feed } : f) =
@@ -127,8 +127,8 @@ let delete_listing (listing : listing) (feed : f) =
   ()
 
 let like_post (i : int) (user_id : int) (feed : f) =
-
-  if user_id <> 0 then (print_endline ("You have liked post " ^ string_of_int i ^ ".");
+  if user_id <> 0 then (
+    print_endline ("You have liked post " ^ string_of_int i ^ ".");
     let update p =
       if p.listing_id = i then { p with likes = p.likes + 1 } else p
     in
@@ -204,4 +204,3 @@ let post (user_id : int) (username : string) (feed : f) =
 
     print_string "\nPost created successfully!\n")
   else print_string "\nYou need to sign in to create a post.\n"
-

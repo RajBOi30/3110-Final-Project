@@ -68,6 +68,9 @@ let my_listings feed =
   print_string (print_myfeed user.id "\nHere are your current listings:\n" feed)
 
 let purchase i =
+  let feed =
+    feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+  in
   if user.id = 3000 then begin
     let post_id = ref i in
     if !post_id = 0 then (
@@ -78,7 +81,7 @@ let purchase i =
       begin
         match response with
         | "Y" | "y" -> ()
-        | _ -> homepage ()
+        | _ -> homepage feed
       end;
       print_string "\n\nPlease enter the ID:";
       let input_id = read_line () in
@@ -143,8 +146,7 @@ let rec welcome_page () =
     | Help ->
         help ();
         welcome_page ()
-    | Purchase i ->
-        purchase i;
+    | Purchase i -> purchase i
     | Post ->
         post user.id user.username feed;
         welcome_page ()

@@ -8,6 +8,7 @@ type command =
   | Purchase of int
   | Help
   | Post
+  | Reviews
 
 exception Empty
 (** Raised when an empty command is parsed. *)

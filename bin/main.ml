@@ -115,6 +115,29 @@ let help () =
      Post: Post a listing (requires a user is signed in)\n\
      Like: Like a post (requires a user is signed in)\n\n"
 
+let review () =
+  let feed =
+    feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+  in
+  if user.id <> 3000 then begin
+    print_string
+      "\n\n\nDo you know the ID of the post you want to review? (Y or N)\n\n";
+    let response = read_line () in
+    begin
+      match response with
+      | "Y" | "y" -> ()
+      | _ -> homepage feed
+    end;
+    print_string "\n\nPlease enter the ID of the post you want to review:\n";
+    let input_id = read_line () in
+    let post_id = int_of_string input_id in
+    print_string
+      ("Here are the current reviews for "
+      ^ get_title (get_listing post_id feed)
+      ^ ":")
+  end
+  else print_string "\n\n\nPlease sign in to make a review\n\n\n"
+
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)
 let rec welcome_page () =
@@ -151,6 +174,9 @@ let rec welcome_page () =
         welcome_page ()
     | Post ->
         post user.id user.username feed;
+        welcome_page ()
+    | Reviews ->
+        review ();
         welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";

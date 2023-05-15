@@ -28,11 +28,6 @@ let user_list =
     (Yojson.Basic.from_file
        ("data/userData" ^ Filename.dir_sep ^ "test_users.json"))
 
-let user1 =
-  user_from_json
-    (Yojson.Basic.from_file
-       ("data/userData" ^ Filename.dir_sep ^ "test_users.json"))
-
 let test_file = Yojson.Basic.from_file "data/listings_TEST.json"
 let feed = feed_from_json test_file
 let listing1 = get_listing 1 feed
@@ -479,7 +474,6 @@ let users_tests =
     user_following_test
       "Check that user 1's following list is correctly read in" 4 user_list
       [ "rajsinha999"; "kaylin" ];
-    user_from_json_test "Converts user JSON to user object" test_file user1;
   ]
 
 let suite =

@@ -43,7 +43,7 @@ let to_yojson p : Yojson.Basic.t =
       ("likes", `Int p.likes);
     ]
 
-let file_path = "data/listings.json"
+let file_path = "data/listings copy.json"
 
 (**[get_listing_id x] returns the listing id of listing [x].*)
 let save_to_json ({ feed } : f) =
@@ -76,6 +76,11 @@ let get_price x = x.price
 let get_date x = x.date
 
 let get_likes x = x.likes
+
+let get_listing (x : int) (lst : f) =
+  List.find (fun a -> a.listing_id = x) lst.feed
+
+let archive_listing listing = ()
 
 let single_listing listing =
   let title = get_title listing in
@@ -111,6 +116,15 @@ let rec print_myfeed id acc (lst : f) =
         if get_user_id h == id then
           print_myfeed id (acc ^ single_listing h) { feed = t }
         else print_myfeed id acc { feed = t }
+
+let delete_listing (listing : listing) (feed : f) =
+  let existing_json =
+    try Yojson.Basic.from_file file_path
+    with _ -> `Assoc [ ("listings", `List []) ]
+  in
+  let existing_feed = feed_from_json existing_json in
+  print_string (print_feed " " existing_feed);
+  ()
 
 let like_post (i : int) (user_id : int) (feed : f) =
 
@@ -190,3 +204,4 @@ let post (user_id : int) (username : string) (feed : f) =
 
     print_string "\nPost created successfully!\n")
   else print_string "\nYou need to sign in to create a post.\n"
+

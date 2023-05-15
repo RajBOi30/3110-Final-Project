@@ -25,7 +25,6 @@ let pp_list pp_elt lst =
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let user_data_dir_prefix = "data/" ^ "userData" ^ Filename.dir_sep
-let user_list = Yojson.Basic.from_file (user_data_dir_prefix ^ "test_users.json")
 let listings = Yojson.Basic.from_file (data_dir_prefix ^ "listings.json")
 
 (* Helper Functions for Testing *)
@@ -90,6 +89,10 @@ let print_myfeed_test (name : string) (id : int) (acc : string) (feed : f)
     (expected_output : string) : test =
   name >:: fun _ ->
   assert_equal ~printer:(fun x -> x) expected_output (print_myfeed id acc feed)
+
+let get_uname_test (name : string) (id : int) (lst : u)
+    (expected_output : string) : test =
+  name >:: fun _ -> assert_equal expected_output (get_uname_from_id id lst)
 
 (* Test Cases *)
 let command_tests =
@@ -343,7 +346,25 @@ let get_listing_tests =
        Likes: 3\n";
   ]
 
-let users_tests = []
+let user_list =
+  users_from_json
+    (Yojson.Basic.from_file
+       ("data/userData" ^ Filename.dir_sep ^ "test_users.json"))
+
+let ids = id_list user_list
+
+let users_tests =
+  [
+    (* Get Username Tests*)
+    get_uname_test "Test that user 1 can be queryed by user id number" 1
+      user_list "RajSinha999";
+    get_uname_test "Test that user 4 can be queryed by user id number" 4
+      user_list "peppapig";
+    get_uname_test "Test that user 2 can be queryed by user id number" 2
+      user_list "KevinLin21733";
+    get_uname_test "Test that user 3 can be queryed by user id number" 3
+      user_list "Kaylin";
+  ]
 
 let suite =
   "test suite for Market"
@@ -354,6 +375,7 @@ let suite =
            is_valid_date_tests;
            is_valid_date_tests;
            get_listing_tests;
+           users_tests;
          ]
 
 let _ = run_test_tt_main suite

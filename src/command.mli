@@ -16,6 +16,8 @@ type command =
   | ViewFollowing
   | CreateAccount
   | ViewUsers
+  | SuggestedPost
+  | SuggestedUser
 
 exception Empty
 (** Raised when an empty command is parsed. *)

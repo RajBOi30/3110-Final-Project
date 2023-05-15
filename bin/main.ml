@@ -7,11 +7,6 @@ open Yojson
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let data_dir_prefix_user = "data/userData" ^ Filename.dir_sep
 
-let user_list =
-  users_from_json (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
-
-let ids = id_list user_list
-
 type user_rec = {
   mutable id : int;
   mutable username : string;
@@ -25,6 +20,11 @@ let homepage feed =
   print_string (print_feed "\nHere are the latest listings:\n" feed)
 
 let signin () =
+  let user_list =
+    users_from_json
+      (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
+  in
+  let ids = id_list user_list in
   print_string "\nPlease enter your user id.\n\n";
   if user.id = 0 then
     let entered_id = read_line () in
@@ -144,6 +144,10 @@ let rec welcome_page () =
   let feed =
     feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
   in
+  let user_list =
+    users_from_json
+      (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
+  in
   print_string
     ("\n\n\
       Please enter a command ('help' provides a list of commands) to explore \
@@ -177,6 +181,15 @@ let rec welcome_page () =
         welcome_page ()
     | Reviews ->
         review ();
+        welcome_page ()
+    | Save i ->
+        save_post i user.id user_list;
+        welcome_page ()
+    | SavedIDs ->
+        print_saved_ids user.id user_list;
+        welcome_page ()
+    | MySaved ->
+        print_saved_posts user.id user_list;
         welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";

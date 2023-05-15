@@ -9,6 +9,9 @@ type command =
   | Help
   | Post
   | Reviews
+  | Save of int
+  | MySaved
+  | SavedIDs
 
 exception Empty
 (** Raised when an empty command is parsed. *)

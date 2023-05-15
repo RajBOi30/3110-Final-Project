@@ -80,6 +80,10 @@ let get_likes_test (name : string) (listing : listing) (expected_output : int) :
     test =
   name >:: fun _ -> assert_equal expected_output (get_likes listing)
 
+let get_reviews_test (name : string) (listing : listing)
+    (expected_output : string list) : test =
+  name >:: fun _ -> assert_equal expected_output (get_reviews listing)
+
 let single_listing_test (name : string) (listing : listing)
     (expected_output : string) : test =
   name >:: fun _ ->
@@ -93,6 +97,11 @@ let print_myfeed_test (name : string) (id : int) (acc : string) (feed : f)
 let get_uname_test (name : string) (id : int) (lst : u)
     (expected_output : string) : test =
   name >:: fun _ -> assert_equal expected_output (get_uname_from_id id lst)
+
+let print_feed_test (name : string) (acc : string) (feed : f)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal ~printer:(fun x -> x) expected_output (print_feed acc feed)
 
 (* Test Cases *)
 let command_tests =
@@ -254,6 +263,8 @@ let get_listing_tests =
     get_likes_test "The likes of listing1 is 1" listing1 1;
     get_likes_test "The likes of listing2 is 0" listing2 0;
     get_likes_test "The likes of listing3 is 1" listing3 1;
+    get_reviews_test "The reviews of listing1 is []" listing1 [];
+    get_reviews_test "The reviews of listing2 is []" listing2 [];
     single_listing_test
       "The single_listing prints out the listing1 on the terminal interface"
       listing1
@@ -344,6 +355,53 @@ let get_listing_tests =
        Price: $10.00\n\
        Posted by: Kaylin on 3/7/23\n\
        Likes: 3\n";
+    print_feed_test
+      "The print_feed prints out the feed on the terminal interface"
+      "\nHere are the latest listings:\n" feed
+      "\n\
+       Here are the latest listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Xbox Controller\n\
+       ID: 1\n\
+       Item Description: Used Xbox 1 controller, broken left joystick\n\
+       Price: $13.99\n\
+       Posted by: RajSinha999 on 3/21/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Kirby Plushie\n\
+       ID: 2\n\
+       Item Description: Used Plushie\n\
+       Price: $4.00\n\
+       Posted by: RajSinha999 on 2/2/23\n\
+       Likes: 0\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Glasses\n\
+       ID: 3\n\
+       Item Description: -8.5 eyesight glasses\n\
+       Price: $69.00\n\
+       Posted by: Kaylin on 3/3/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Phone Case\n\
+       ID: 4\n\
+       Item Description: Blue iPhone 14 case\n\
+       Price: $10.00\n\
+       Posted by: Kaylin on 3/7/23\n\
+       Likes: 3\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Boba\n\
+       ID: 5\n\
+       Item Description: A singular Boba\n\
+       Price: $11.11\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Straw\n\
+       ID: 6\n\
+       Item Description: A straw for your boba\n\
+       Price: $22.22\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 4\n";
   ]
 
 let user_list =

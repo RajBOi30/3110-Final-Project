@@ -109,11 +109,22 @@ let help () =
      Here is a list of supported commands:\n\n\
      Home: Displays the homepage of the app with the most recent listings\n\
      Quit: Exits the app\n\
-     My Listings: Displays all of your listings (requires a signed in user)\n\
+     My Listings: Displays all of your listings (requires a user to be signed \
+     in)\n\
      Sign in: Allows the user to sign in with their username and password\n\
-     Sign out: Propmts the user to sign out (requires a user is signed in)\n\
+     Sign out: Propmts the user to sign out (requires a user to be signed in)\n\
      Post: Post a listing (requires a user is signed in)\n\
-     Like: Like a post (requires a user is signed in)\n\n"
+     Review: View and post reviews for any listing \n\
+     Purchase: Purchase an item that is currently on the market (requires a \
+     user to be signed in)\n\
+     Save:-\n\
+     My Saved:-\n\
+     Saved IDs:-\n\
+     Follow:-\n\
+     View Following:-\n\
+     Create Account:-\n\
+     View Users:-\n\
+     Like: Like a post (requires a user to be signed in)\n\n"
 
 let review () =
   let feed =

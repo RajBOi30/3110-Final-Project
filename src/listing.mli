@@ -28,5 +28,8 @@ val like_post : int -> int -> f -> unit
 val post : int -> string -> f -> unit
 val is_valid_price : string -> bool
 val is_valid_date : string -> bool
+val get_reviews : listing -> string list
+val print_reviews : listing -> string
+val add_review : listing -> string -> unit
 val listing_from_json : Yojson.Basic.t -> listing
 val print_feed_by_id : int list -> string -> f -> string

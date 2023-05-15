@@ -115,7 +115,6 @@ let rec print_myfeed id acc (lst : f) =
           print_myfeed id (acc ^ single_listing h) { feed = t }
         else print_myfeed id acc { feed = t }
 
-
 let rec print_feed_by_id (id_list : int list) acc (lst : f) =
   match lst.feed with
   | [] -> acc

@@ -39,6 +39,26 @@
       "price": "10.00",
       "date": "3/7/23",
       "likes": 3
+    },
+    {
+      "listing id": 5,
+      "user id": 2,
+      "username": "KevinLin21733",
+      "title": "Boba",
+      "description": "A singular Boba",
+      "price": "11.11",
+      "date": "05/14/23",
+      "likes": 1
+    },
+    {
+      "listing id": 6,
+      "user id": 2,
+      "username": "KevinLin21733",
+      "title": "Straw",
+      "description": "A straw for your boba",
+      "price": "22.22",
+      "date": "05/14/23",
+      "likes": 4
     }
   ]
 }

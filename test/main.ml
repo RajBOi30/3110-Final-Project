@@ -5,7 +5,6 @@ open Users
 open Command
 open Yojson.Basic.Util
 
-
 (** [pp_string s] pretty-prints string [s]. *)
 let pp_string s = "\"" ^ s ^ "\""
 
@@ -44,7 +43,6 @@ let is_valid_date_test (name : string) (str : string) (expected_output : bool) :
   name >:: fun _ ->
   assert_equal expected_output (is_valid_date str) ~printer:string_of_bool
 
-
 let test_file = Yojson.Basic.from_file "data/listings.json"
 
 let get_listing_test (name : string) (int : int) (f : f)
@@ -82,6 +80,16 @@ let get_date_test (name : string) (listing : listing) (expected_output : string)
 let get_likes_test (name : string) (listing : listing) (expected_output : int) :
     test =
   name >:: fun _ -> assert_equal expected_output (get_likes listing)
+
+let single_listing_test (name : string) (listing : listing)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal ~printer:(fun x -> x) expected_output (single_listing listing)
+
+let print_myfeed_test (name : string) (id : int) (acc : string) (feed : f)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal ~printer:(fun x -> x) expected_output (print_myfeed id acc feed)
 
 (* Test Cases *)
 let command_tests =
@@ -203,35 +211,136 @@ let feed =
 
 let listing1 = get_listing 1 feed
 let listing2 = get_listing 2 feed
+let listing3 = get_listing 3 feed
 
 let get_listing_tests =
   [
     get_listing_test "Gets the listing 1 from listing feed" 1 feed listing1;
     get_listing_test "Gets the listing 2 from listing feed" 2 feed listing2;
+    get_listing_test "Gets the listing 3 from listing feed" 3 feed listing3;
     get_listing_id_test "The listing_id of listing1 is 1" listing1 1;
     get_listing_id_test "The listing_id of listing2 is 2" listing2 2;
+    get_listing_id_test "The listing_id of listing3 is 3" listing3 3;
     get_user_id_test "The user_id of listing1 is 1" listing1 1;
     get_user_id_test "The user_id of listing2 is 1" listing2 1;
+    get_user_id_test "The user_id of listing3 is 3" listing3 3;
     get_username_test "The username of listing1 is \"RajSinha999\"" listing1
       "RajSinha999";
     get_username_test "The username of listing2 is \"RajSinha999\"" listing2
       "RajSinha999";
+    get_username_test "The username of listing3 is \"Kaylin\"" listing3 "Kaylin";
     get_title_test "The title of listing1 is \"Xbox Controller\"" listing1
       "Xbox Controller";
-    get_title_test "The title of listing1 is \"Kirby Plushie\"" listing2
+    get_title_test "The title of listing2 is \"Kirby Plushie\"" listing2
       "Kirby Plushie";
+    get_title_test "The title of listing3 is \"Glasses\"" listing3 "Glasses";
     get_desc_test
       "The description of listing1 is \"Used Xbox 1 controller, broken left \
        joystick\""
       listing1 "Used Xbox 1 controller, broken left joystick";
     get_desc_test "The description of listing2 is \"Used Plushie\"" listing2
       "Used Plushie";
+    get_desc_test "The description of listing3 is \"-8.5 eyesight glasses\""
+      listing3 "-8.5 eyesight glasses";
     get_price_test "The price of listing1 is \"13.99\"" listing1 "13.99";
     get_price_test "The price of listing2 is \"4.00\"" listing2 "4.00";
+    get_price_test "The price of listing3 is \"69.00\"" listing3 "69.00";
     get_date_test "The date of listing1 is \"3/21/23\"" listing1 "3/21/23";
-    get_date_test "The date of listing2 is \"3/21/23\"" listing2 "2/2/23";
+    get_date_test "The date of listing2 is \"2/2/23\"" listing2 "2/2/23";
+    get_date_test "The date of listing3 is \"3/3/23\"" listing3 "3/3/23";
     get_likes_test "The likes of listing1 is 1" listing1 1;
-    get_likes_test "The likes of listing1 is 0" listing2 0;
+    get_likes_test "The likes of listing2 is 0" listing2 0;
+    get_likes_test "The likes of listing3 is 1" listing3 1;
+    single_listing_test
+      "The single_listing prints out the listing1 on the terminal interface"
+      listing1
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Xbox Controller\n\
+       ID: 1\n\
+       Item Description: Used Xbox 1 controller, broken left joystick\n\
+       Price: $13.99\n\
+       Posted by: RajSinha999 on 3/21/23\n\
+       Likes: 1\n";
+    single_listing_test
+      "The single_listing prints out the listing2 on the terminal interface"
+      listing2
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Kirby Plushie\n\
+       ID: 2\n\
+       Item Description: Used Plushie\n\
+       Price: $4.00\n\
+       Posted by: RajSinha999 on 2/2/23\n\
+       Likes: 0\n";
+    single_listing_test
+      "The single_listing prints out the listing3 on the terminal interface"
+      listing3
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Glasses\n\
+       ID: 3\n\
+       Item Description: -8.5 eyesight glasses\n\
+       Price: $69.00\n\
+       Posted by: Kaylin on 3/3/23\n\
+       Likes: 1\n";
+    print_myfeed_test
+      "The print_myfeed prints out the user 1's listing from feed on the \
+       terminal interface"
+      1 "\nHere are your current listings:\n" feed
+      "\n\
+       Here are your current listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Xbox Controller\n\
+       ID: 1\n\
+       Item Description: Used Xbox 1 controller, broken left joystick\n\
+       Price: $13.99\n\
+       Posted by: RajSinha999 on 3/21/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Kirby Plushie\n\
+       ID: 2\n\
+       Item Description: Used Plushie\n\
+       Price: $4.00\n\
+       Posted by: RajSinha999 on 2/2/23\n\
+       Likes: 0\n";
+    print_myfeed_test
+      "The print_myfeed prints out the user 2's listing from feed on the \
+       terminal interface"
+      2 "\nHere are your current listings:\n" feed
+      "\n\
+       Here are your current listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Boba\n\
+       ID: 5\n\
+       Item Description: A singular Boba\n\
+       Price: $11.11\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Straw\n\
+       ID: 6\n\
+       Item Description: A straw for your boba\n\
+       Price: $22.22\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 4\n";
+    print_myfeed_test
+      "The print_myfeed prints out the user 3's listing from feed on the \
+       terminal interface"
+      3 "\nHere are your current listings:\n" feed
+      "\n\
+       Here are your current listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Glasses\n\
+       ID: 3\n\
+       Item Description: -8.5 eyesight glasses\n\
+       Price: $69.00\n\
+       Posted by: Kaylin on 3/3/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Phone Case\n\
+       ID: 4\n\
+       Item Description: Blue iPhone 14 case\n\
+       Price: $10.00\n\
+       Posted by: Kaylin on 3/7/23\n\
+       Likes: 3\n";
   ]
 
 let users_tests = []

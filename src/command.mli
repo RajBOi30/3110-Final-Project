@@ -14,6 +14,8 @@ type command =
   | SavedIDs
   | Follow of string
   | ViewFollowing
+  | CreateAccount
+  | ViewUsers
 
 exception Empty
 (** Raised when an empty command is parsed. *)

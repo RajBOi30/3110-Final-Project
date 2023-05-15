@@ -16,6 +16,8 @@ type command =
   | SavedIDs
   | Follow of string
   | ViewFollowing
+  | CreateAccount
+  | ViewUsers
 
 exception Empty
 exception Malformed
@@ -59,4 +61,8 @@ let parse input =
     end
   | "view" :: "following" :: t -> ViewFollowing
   | "viewfollowing" :: t -> ViewFollowing
+  | "createaccount" :: t -> CreateAccount
+  | "create" :: "account" :: t -> CreateAccount
+  | "viewusers" :: t -> ViewUsers
+  | "view" :: "users" :: t -> ViewUsers
   | _ -> raise Malformed

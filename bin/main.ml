@@ -42,7 +42,8 @@ let signin () =
          ^ user.username ^ "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))
       else
         print_string
-          "That username password combination does not match, returning to \
+          "\n\
+           That username password combination does not match, returning to \
            home screen.\n")
     else print_string "\nUser ID not found, returning to home screen.\n"
   else print_string "\nUser is already authenticated\n"

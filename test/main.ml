@@ -103,6 +103,11 @@ let print_feed_test (name : string) (acc : string) (feed : f)
   name >:: fun _ ->
   assert_equal ~printer:(fun x -> x) expected_output (print_feed acc feed)
 
+let print_reviews_test (name : string) (listings : listing)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal ~printer:(fun x -> x) expected_output (print_reviews listings)
+
 (* Test Cases *)
 let command_tests =
   [
@@ -402,6 +407,10 @@ let get_listing_tests =
        Price: $22.22\n\
        Posted by: KevinLin21733 on 05/14/23\n\
        Likes: 4\n";
+    print_reviews_test "The reviews of listing1 is empty" listing1
+      "There are no reviews yet for this listing. Be the first to review!";
+    print_reviews_test "The reviews of listing2 is empty" listing2
+      "There are no reviews yet for this listing. Be the first to review!";
   ]
 
 let user_list =
@@ -436,7 +445,6 @@ let suite =
            is_valid_date_tests;
            get_listing_tests;
            users_tests;
-
          ]
 
 let _ = run_test_tt_main suite

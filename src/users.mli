@@ -10,3 +10,5 @@ val print_saved_ids : int -> u -> unit
 val print_saved_posts : int -> u -> unit
 val follow_user : string -> int -> u -> unit
 val view_following : int -> u -> unit
+val create_account : u -> unit
+val view_users : u -> unit

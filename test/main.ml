@@ -127,6 +127,10 @@ let print_reviews_test (name : string) (listings : listing)
   name >:: fun _ ->
   assert_equal ~printer:(fun x -> x) expected_output (print_reviews listings)
 
+let feed_from_json_test (name : string) (json : Yojson.Basic.t)
+    (expected_output : f) : test =
+  name >:: fun _ -> assert_equal expected_output (feed_from_json json)
+
 (* Test Cases *)
 let command_tests =
   [
@@ -143,6 +147,28 @@ let command_tests =
     command_test "Sign In one word case" "SignIn" SignIn;
     command_test "Sign In two word case" "Sign In" SignIn;
     command_test "Sign In lower case test" "signin" SignIn;
+    command_test "Like command with low number post" "Like 1 " (Like 1);
+    command_test "Like command with higher post number" "Like 20 " (Like 20);
+    command_test "Purchase with a 0 input" "Purchase 0 " (Purchase 0);
+    command_test "Purchase with a high input (Purchase 10)" "Purchase 10 "
+      (Purchase 10);
+    command_test
+      "Test the help command with disrupted characters (different cases) "
+      "hElP" Help;
+    command_test "Test the standard help command" "Help" Help;
+    command_test "Standard Post command" "Post" Post;
+    command_test "Standard reviews command" "Reviews" Reviews;
+    command_test "Reviews command but with no 's'" "Review" Reviews;
+    command_test "Save a single post" "Save 1 " (Save 1);
+    command_test "View saved IDS (standard type)" "Saved IDs" SavedIDs;
+    command_test "Vieww Saved IDs with lower case" "saved ids" SavedIDs;
+    command_test "View Follwing with no spaces" "viewfollowing" ViewFollowing;
+    command_test "View Follwing with spaces" "view following" ViewFollowing;
+    command_test "Create account with standard case" "Create account"
+      CreateAccount;
+    command_test "Create account with random cases" "create AcCount"
+      CreateAccount;
+    command_test "View users standard command call" "view users" ViewUsers;
   ]
 
 let is_valid_price_tests =

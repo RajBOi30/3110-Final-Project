@@ -105,7 +105,7 @@ let get_uname_test (name : string) (id : int) (lst : u)
     (expected_output : string) : test =
   name >:: fun _ -> assert_equal expected_output (get_uname_from_id id lst)
 
-let get_pass_test (name : string) (id : int) (lst : u)
+let get_pass_from_id_test (name : string) (id : int) (lst : u)
     (expected_output : string) : test =
   name >:: fun _ -> assert_equal expected_output (get_pass_from_id id lst)
 
@@ -444,16 +444,16 @@ let users_tests =
     get_uname_test "Test that user 3 can be queryed by user id number" 3
       user_list "Kaylin";
     (*Get Password Tests*)
-    get_pass_test
+    get_pass_from_id_test
       "Test that user 1's password is correctly read in using their ID" 1
       user_list "watermelon";
-    get_pass_test
+    get_pass_from_id_test
       "Test that user 2's password is correctly read in using their ID" 2
       user_list "peaches";
-    get_pass_test
+    get_pass_from_id_test
       "Test that user 3's password is correctly read in using their ID" 3
       user_list "tangerine";
-    get_pass_test
+    get_pass_from_id_test
       "Test that user 4's password is correctly read in using their ID" 4
       user_list "oink";
     (*ID List Test*)

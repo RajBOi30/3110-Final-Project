@@ -14,6 +14,8 @@ type command =
   | Save of int
   | MySaved
   | SavedIDs
+  | Follow of string
+  | ViewFollowing
 
 exception Empty
 exception Malformed
@@ -50,4 +52,11 @@ let parse input =
       | [ x ] -> ( try Like (int_of_string x) with _ -> raise Malformed)
       | _ -> raise Malformed
     end
+  | "follow" :: t -> begin
+      match t with
+      | [ x ] -> ( try Follow x with _ -> raise Malformed)
+      | _ -> raise Malformed
+    end
+  | "view" :: "following" :: t -> ViewFollowing
+  | "viewfollowing" :: t -> ViewFollowing
   | _ -> raise Malformed

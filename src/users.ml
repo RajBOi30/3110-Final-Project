@@ -107,3 +107,76 @@ let print_saved_posts user_id { users } =
           (Yojson.Basic.from_file ("data" ^ Filename.dir_sep ^ "listings.json"))
       in
       print_string ("Your saved posts:\n" ^ print_feed_by_id saved "" feed)
+
+(* let follow_user username user_id { users } = if user_id = 0 then print_string
+   "Please sign in to follow a user.\n" else if String.lowercase_ascii
+   (get_uname_from_id user_id { users }) = String.lowercase_ascii username then
+   print_string "You cannot follow yourself.\n" else let lowercase_username =
+   String.lowercase_ascii username in let user_exists = List.exists (fun u ->
+   String.lowercase_ascii u.username = lowercase_username) users in if not
+   user_exists then print_string "The user does not exist.\n" else let
+   updated_users = List.map (fun u -> if u.user_id = user_id then let
+   updated_following = if List.mem lowercase_username (List.map
+   String.lowercase_ascii u.following) then u.following else lowercase_username
+   :: u.following in { u with following = updated_following } else u) users in
+   let updated_user_list = { users = updated_users } in save_to_users
+   updated_user_list; print_string ("You are now following user: " ^ username ^
+   "\n") *)
+let get_following user_id { users } =
+  let user = List.find (fun u -> u.user_id = user_id) users in
+  user.following
+
+let follow_user username user_id { users } =
+  if user_id = 0 then print_string "Please sign in to follow a user.\n"
+  else if
+    String.lowercase_ascii (get_uname_from_id user_id { users })
+    = String.lowercase_ascii username
+  then print_string "You cannot follow yourself.\n"
+  else
+    let lowercase_username = String.lowercase_ascii username in
+    let user_exists =
+      List.exists
+        (fun u -> String.lowercase_ascii u.username = lowercase_username)
+        users
+    in
+    if not user_exists then print_string "The user does not exist.\n"
+    else
+      let is_already_following =
+        let current_following =
+          List.map String.lowercase_ascii (get_following user_id { users })
+        in
+        List.mem lowercase_username current_following
+      in
+      if is_already_following then
+        print_string ("You are already following user: " ^ username ^ "\n")
+      else
+        let updated_users =
+          List.map
+            (fun u ->
+              if u.user_id = user_id then
+                let updated_following =
+                  if
+                    List.mem lowercase_username
+                      (List.map String.lowercase_ascii u.following)
+                  then u.following
+                  else lowercase_username :: u.following
+                in
+                { u with following = updated_following }
+              else u)
+            users
+        in
+        let updated_user_list = { users = updated_users } in
+        save_to_users updated_user_list;
+        print_string ("You are now following user: " ^ username ^ "\n")
+
+let view_following user_id { users } =
+  if user_id = 0 then
+    print_string "Please sign in to view the users you follow.\n"
+  else
+    let following = get_following user_id { users } in
+    if List.length following = 0 then
+      print_string "You are not following any users.\n"
+    else begin
+      print_string "Users you follow:\n";
+      List.iter (fun username -> print_endline username) following
+    end

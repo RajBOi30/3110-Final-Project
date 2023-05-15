@@ -12,3 +12,4 @@ val print_feed : string -> f -> string
 val print_myfeed : int -> string -> f -> string
 val like_post : int -> int -> f -> unit
 val post : int -> string -> f -> unit
+val print_feed_by_id : int list -> string -> f -> string

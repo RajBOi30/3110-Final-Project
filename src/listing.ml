@@ -45,7 +45,6 @@ let to_yojson p : Yojson.Basic.t =
 
 let file_path = "data/listings.json"
 
-(**[get_listing_id x] returns the listing id of listing [x].*)
 let save_to_json ({ feed } : f) =
   let json_output post_list : Yojson.Basic.t =
     `Assoc [ ("listings", `List (List.map to_yojson post_list)) ]
@@ -55,6 +54,7 @@ let save_to_json ({ feed } : f) =
   Yojson.Basic.to_channel oc yojson_post;
   close_out oc
 
+(**[get_listing_id x] returns the listing id of listing [x].*)
 let get_listing_id x = x.listing_id
 
 (**[get_user_id x] returns the user id of listing [x].*)
@@ -112,9 +112,19 @@ let rec print_myfeed id acc (lst : f) =
           print_myfeed id (acc ^ single_listing h) { feed = t }
         else print_myfeed id acc { feed = t }
 
-let like_post (i : int) (user_id : int) (feed : f) =
+let rec print_feed_by_id (id_list : int list) acc (lst : f) =
+  match lst.feed with
+  | [] -> acc
+  | [ h ] ->
+      if List.mem h.listing_id id_list then acc ^ single_listing h else acc
+  | h :: t ->
+      if List.mem h.listing_id id_list then
+        print_feed_by_id id_list (acc ^ single_listing h) { feed = t }
+      else print_feed_by_id id_list acc { feed = t }
 
-  if user_id <> 0 then (print_endline ("You have liked post " ^ string_of_int i ^ ".");
+let like_post (i : int) (user_id : int) (feed : f) =
+  if user_id <> 0 then (
+    print_endline ("You have liked post " ^ string_of_int i ^ ".");
     let update p =
       if p.listing_id = i then { p with likes = p.likes + 1 } else p
     in

@@ -1,3 +1,4 @@
 (library
  (name market)
+ (public_name Market)
  (libraries yojson ANSITerminal))

@@ -12,3 +12,4 @@ val follow_user : string -> int -> u -> unit
 val view_following : int -> u -> unit
 val create_account : u -> unit
 val view_users : u -> unit
+val get_following : int -> u -> string list

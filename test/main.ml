@@ -27,6 +27,13 @@ let data_dir_prefix = "data" ^ Filename.dir_sep
 let user_data_dir_prefix = "data/" ^ "userData" ^ Filename.dir_sep
 let listings = Yojson.Basic.from_file (data_dir_prefix ^ "listings.json")
 
+let user_list =
+  users_from_json
+    (Yojson.Basic.from_file
+       ("data/userData" ^ Filename.dir_sep ^ "test_users.json"))
+
+let ids = id_list user_list
+
 (* Helper Functions for Testing *)
 let command_test (name : string) (str : string) (expected_output : command) :
     test =
@@ -98,10 +105,22 @@ let get_uname_test (name : string) (id : int) (lst : u)
     (expected_output : string) : test =
   name >:: fun _ -> assert_equal expected_output (get_uname_from_id id lst)
 
+let get_pass_test (name : string) (id : int) (lst : u)
+    (expected_output : string) : test =
+  name >:: fun _ -> assert_equal expected_output (get_pass_from_id id lst)
+
 let print_feed_test (name : string) (acc : string) (feed : f)
     (expected_output : string) : test =
   name >:: fun _ ->
   assert_equal ~printer:(fun x -> x) expected_output (print_feed acc feed)
+
+let id_list_test (name : string) (input : u) (expected_output : int list) : test
+    =
+  name >:: fun _ -> assert_equal (id_list user_list) ids
+
+let user_following_test (name : string) (user_id : int) (lst : u)
+    (expected_output : string list) : test =
+  name >:: fun _ -> assert_equal expected_output (get_following user_id lst)
 
 (* Test Cases *)
 let command_tests =
@@ -404,13 +423,6 @@ let get_listing_tests =
        Likes: 4\n";
   ]
 
-let user_list =
-  users_from_json
-    (Yojson.Basic.from_file
-       ("data/userData" ^ Filename.dir_sep ^ "test_users.json"))
-
-let ids = id_list user_list
-
 let users_tests =
   [
     (* Get Username Tests*)
@@ -422,9 +434,24 @@ let users_tests =
       user_list "KevinLin21733";
     get_uname_test "Test that user 3 can be queryed by user id number" 3
       user_list "Kaylin";
+    (*Get Password Tests*)
+    get_pass_test
+      "Test that user 1's password is correctly read in using their ID" 1
+      user_list "watermelon";
+    get_pass_test
+      "Test that user 2's password is correctly read in using their ID" 2
+      user_list "peaches";
+    get_pass_test
+      "Test that user 3's password is correctly read in using their ID" 3
+      user_list "tangerine";
+    get_pass_test
+      "Test that user 4's password is correctly read in using their ID" 4
+      user_list "oink";
+    (*ID List Test*)
+    id_list_test "Test that ID_list helper method functions correctly" user_list
+      [ 4; 1; 2; 3 ]
+    (*User Following Tests*);
   ]
-
-let users_tests = []
 
 let suite =
   "test suite for Market"
@@ -436,7 +463,6 @@ let suite =
            is_valid_date_tests;
            get_listing_tests;
            users_tests;
-
          ]
 
 let _ = run_test_tt_main suite

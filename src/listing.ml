@@ -127,8 +127,8 @@ let delete_listing (listing : listing) (feed : f) =
   ()
 
 let like_post (i : int) (user_id : int) (feed : f) =
-
-  if user_id <> 0 then (print_endline ("You have liked post " ^ string_of_int i ^ ".");
+  if user_id <> 0 then (
+    print_endline ("You have liked post " ^ string_of_int i ^ ".");
     let update p =
       if p.listing_id = i then { p with likes = p.likes + 1 } else p
     in
@@ -136,7 +136,7 @@ let like_post (i : int) (user_id : int) (feed : f) =
     save_to_json new_feed)
   else print_string "\nPlease sign in to like a post."
 
-let is_date_format (s : string) : bool =
+let is_valid_date (s : string) : bool =
   try
     let parts = String.split_on_char '/' s in
     if List.length parts <> 3 then false
@@ -157,6 +157,21 @@ let is_date_format (s : string) : bool =
       && year >= 0 && year <= 99
   with _ -> false
 
+let is_valid_price (str : string) : bool =
+  let rec has_valid_format (chars : char list) (decimalPointSeen : bool)
+      (digitCount : int) : bool =
+    match chars with
+    | [] -> digitCount > 0 && digitCount <= 2
+    | c :: rest ->
+        if c = '.' then
+          if decimalPointSeen || digitCount = 0 then false
+          else has_valid_format rest true 0
+        else if c >= '0' && c <= '9' then
+          has_valid_format rest decimalPointSeen (digitCount + 1)
+        else false
+  in
+  has_valid_format (List.of_seq (String.to_seq str)) false 0
+
 let post (user_id : int) (username : string) (feed : f) =
   if user_id <> 0 then (
     print_string "\nPlease enter the title of your post:\n";
@@ -165,15 +180,19 @@ let post (user_id : int) (username : string) (feed : f) =
     print_string "\nPlease enter the description of your post:\n";
     let description = read_line () in
 
-    print_string
-      "\nPlease enter the price of your post in the format \"0.00\":\n";
-    let price = read_line () in
+    let rec read_price () =
+      print_string
+        "\nPlease enter the price of your post in the format \"0.00\":\n";
+      let price = read_line () in
+      if is_valid_price price then price else read_price ()
+    in
+    let price = read_price () in
 
     let rec read_date () =
       print_string
         "\nPlease enter the date of your post in the format \"MM/DD/YY\":\n";
       let date = read_line () in
-      if is_date_format date then date else read_date ()
+      if is_valid_date date then date else read_date ()
     in
     let date = read_date () in
 

@@ -76,6 +76,9 @@ let get_date x = x.date
 
 let get_likes x = x.likes
 
+let get_listing (x : int) (lst : f) =
+  List.find (fun a -> a.listing_id = x) lst.feed
+
 let single_listing listing =
   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" ^ get_title listing ^ "\n"
   ^ "ID: "

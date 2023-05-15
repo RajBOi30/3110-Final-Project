@@ -5,6 +5,7 @@ type command =
   | SignIn
   | SignOut
   | Like of int
+  | Purchase of int
   | Help
 
 exception Empty

@@ -77,6 +77,9 @@ let get_date x = x.date
 
 let get_likes x = x.likes
 
+let get_listing (x : int) (lst : f) =
+  List.find (fun a -> a.listing_id = x) lst.feed
+
 let single_listing listing =
   let title = get_title listing in
   let listing_id = get_listing_id listing in
@@ -112,6 +115,7 @@ let rec print_myfeed id acc (lst : f) =
           print_myfeed id (acc ^ single_listing h) { feed = t }
         else print_myfeed id acc { feed = t }
 
+
 let rec print_feed_by_id (id_list : int list) acc (lst : f) =
   match lst.feed with
   | [] -> acc
@@ -121,6 +125,43 @@ let rec print_feed_by_id (id_list : int list) acc (lst : f) =
       if List.mem h.listing_id id_list then
         print_feed_by_id id_list (acc ^ single_listing h) { feed = t }
       else print_feed_by_id id_list acc { feed = t }
+
+let delete_listing (listing : listing) (feed : f) =
+  let existing_json =
+    try Yojson.Basic.from_file file_path
+    with _ -> `Assoc [ ("listings", `List []) ]
+  in
+  let existing_feed = feed_from_json existing_json in
+  let new_feed = List.filter (fun x -> x <> listing) existing_feed.feed in
+  let updated_feed = { feed = new_feed } in
+  save_to_json updated_feed
+
+let archive_listing (listing : listing) =
+  let existing_json =
+    try Yojson.Basic.from_file file_path
+    with _ -> `Assoc [ ("listings", `List []) ]
+  in
+  let existing_feed = feed_from_json existing_json in
+  print_string (print_feed "ORIGINAL: " existing_feed);
+  let sold_function (post : listing) =
+    match post = listing with
+    | true ->
+        {
+          listing_id = post.listing_id;
+          user_id = post.user_id;
+          username = post.username;
+          title = post.title ^ " (*SOLD!*)";
+          description = "(*SOLD!*)" ^ post.description;
+          price = post.price;
+          date = post.date;
+          likes = post.likes;
+        }
+    | _ -> post
+  in
+  let new_feed = List.map sold_function existing_feed.feed in
+  let updated_feed = { feed = new_feed } in
+  print_string (print_feed "ORIGINAL: " updated_feed);
+  save_to_json updated_feed
 
 let like_post (i : int) (user_id : int) (feed : f) =
   if user_id <> 0 then (
@@ -132,26 +173,52 @@ let like_post (i : int) (user_id : int) (feed : f) =
     save_to_json new_feed)
   else print_string "\nPlease sign in to like a post."
 
-let is_date_format (s : string) : bool =
-  try
+let is_valid_date (s : string) : bool =
+  let valid_format =
+    let len = String.length s in
+    len = 8
+    && s.[2] = '/'
+    && s.[5] = '/'
+    &&
+    let rec check_digits i =
+      if i >= len then true
+      else if i = 2 || i = 5 then check_digits (i + 1)
+      else if s.[i] >= '0' && s.[i] <= '9' then check_digits (i + 1)
+      else false
+    in
+    check_digits 0
+  in
+  if not valid_format then false
+  else
     let parts = String.split_on_char '/' s in
-    if List.length parts <> 3 then false
-    else
-      let month = int_of_string @@ List.nth parts 0 in
-      let day = int_of_string @@ List.nth parts 1 in
-      let year = int_of_string @@ List.nth parts 2 in
-      month >= 1 && month <= 12 && day >= 1
-      && (day
-         <=
-         match month with
-         | 2 ->
-             if year mod 4 = 0 && (year mod 100 <> 0 || year mod 400 = 0) then
-               29
-             else 28
-         | 4 | 6 | 9 | 11 -> 30
-         | _ -> 31)
-      && year >= 0 && year <= 99
-  with _ -> false
+    let month = int_of_string (List.nth parts 0) in
+    let day = int_of_string (List.nth parts 1) in
+    let year = int_of_string (List.nth parts 2) in
+    month >= 1 && month <= 12 && day >= 1
+    && (day
+       <=
+       match month with
+       | 2 ->
+           if year mod 4 = 0 && (year mod 100 <> 0 || year mod 400 = 0) then 29
+           else 28
+       | 4 | 6 | 9 | 11 -> 30
+       | _ -> 31)
+    && year >= 0 && year <= 99
+
+let is_valid_price (str : string) : bool =
+  let rec has_valid_format (chars : char list) (decimalPointSeen : bool)
+      (digitCount : int) : bool =
+    match chars with
+    | [] -> digitCount > 0 && digitCount <= 2
+    | c :: rest ->
+        if c = '.' then
+          if decimalPointSeen || digitCount = 0 then false
+          else has_valid_format rest true 0
+        else if c >= '0' && c <= '9' then
+          has_valid_format rest decimalPointSeen (digitCount + 1)
+        else false
+  in
+  has_valid_format (List.of_seq (String.to_seq str)) false 0
 
 let post (user_id : int) (username : string) (feed : f) =
   if user_id <> 0 then (
@@ -161,15 +228,19 @@ let post (user_id : int) (username : string) (feed : f) =
     print_string "\nPlease enter the description of your post:\n";
     let description = read_line () in
 
-    print_string
-      "\nPlease enter the price of your post in the format \"0.00\":\n";
-    let price = read_line () in
+    let rec read_price () =
+      print_string
+        "\nPlease enter the price of your post in the format \"0.00\":\n";
+      let price = read_line () in
+      if is_valid_price price then price else read_price ()
+    in
+    let price = read_price () in
 
     let rec read_date () =
       print_string
         "\nPlease enter the date of your post in the format \"MM/DD/YY\":\n";
       let date = read_line () in
-      if is_date_format date then date else read_date ()
+      if is_valid_date date then date else read_date ()
     in
     let date = read_date () in
 

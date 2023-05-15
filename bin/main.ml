@@ -49,14 +49,15 @@ let signin () =
 
 let signout () =
   if user.id = 0 then print_string "\nThere is no user signed in.\n"
-  else print_string "\nAre you sure you want to log out (Y or N)?\n";
-  let decision = read_line () in
-  match decision with
-  | "Y" | "y" ->
-      print_string ("\nSuccessfully signed out user: " ^ user.username ^ ".\n");
-      user.id <- 0;
-      user.username <- "None"
-  | _ -> print_string "\n\nYou have not been signed out. Returning to Home.\n"
+  else (
+    print_string "\nAre you sure you want to log out (Y or N)?\n";
+    let decision = read_line () in
+    match decision with
+    | "Y" | "y" ->
+        print_string ("\nSuccessfully signed out user: " ^ user.username ^ ".\n");
+        user.id <- 0;
+        user.username <- "None"
+    | _ -> print_string "\n\nYou have not been signed out. Returning to Home.\n")
 
 (** [exit ()] quits the program. *)
 let exit () =
@@ -65,6 +66,42 @@ let exit () =
 
 let my_listings feed =
   print_string (print_myfeed user.id "\nHere are your current listings:\n" feed)
+
+let purchase i =
+  let feed =
+    feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+  in
+  if user.id <> 0 then begin
+    let post_id = ref i in
+    if !post_id = 0 then (
+      print_string
+        "\n\n\n\
+         Do you know the ID of the post you want to purchase? (Y or N)\n\n";
+      let response = read_line () in
+      begin
+        match response with
+        | "Y" | "y" -> ()
+        | _ -> homepage feed
+      end;
+      print_string "\n\nPlease enter the ID:";
+      let input_id = read_line () in
+      post_id := int_of_string input_id);
+    if String.starts_with "(*SOLD!*)" (get_desc (get_listing !post_id feed))
+    then print_string "\n\nThis item has already been sold!\n\n\n"
+    else (
+      print_string
+        ("\n\nHere is the listing you are about to purchase:\n"
+        ^ single_listing (get_listing !post_id feed));
+      print_string
+        ("\n\nAre you sure you want to purchase this "
+        ^ get_title (get_listing !post_id feed)
+        ^ "? (Y or N)\n\n");
+      let decision = read_line () in
+      match decision with
+      | "Y" | "y" -> archive_listing (get_listing !post_id feed)
+      | _ -> print_string "\n\nThe purchase was not made. Returning to Home.\n")
+  end
+  else print_string "\n\n\nPlease sign in to make a purchase\n\n\n"
 
 let help () =
   print_string
@@ -90,8 +127,8 @@ let rec welcome_page () =
   in
   print_string
     ("\n\n\
-      Please enter a command (such as 'home') to explore the marketplace.\n\
-      (Current User: " ^ user.username ^ ")\n\n");
+      Please enter a command ('help' provides a list of commands) to explore \
+      the marketplace. (Current User: " ^ user.username ^ ")\n\n");
   try
     match parse (read_line ()) with
     | Home ->
@@ -112,6 +149,9 @@ let rec welcome_page () =
         welcome_page ()
     | Help ->
         help ();
+        welcome_page ()
+    | Purchase i ->
+        purchase i;
         welcome_page ()
     | Post ->
         post user.id user.username feed;

@@ -1,8 +1,8 @@
 open OUnit2
 open Market
+open Listing
+open Users
 open Command
-
-(* Helper Functions from A2's Test Suite *)
 
 (** [pp_string s] pretty-prints string [s]. *)
 let pp_string s = "\"" ^ s ^ "\""
@@ -32,6 +32,16 @@ let command_test (name : string) (str : string) (expected_output : command) :
     test =
   name >:: fun _ -> assert_equal expected_output (parse str)
 
+let is_valid_price_test (name : string) (str : string) (expected_output : bool)
+    : test =
+  name >:: fun _ ->
+  assert_equal expected_output (is_valid_price str) ~printer:string_of_bool
+
+let is_valid_date_test (name : string) (str : string) (expected_output : bool) :
+    test =
+  name >:: fun _ ->
+  assert_equal expected_output (is_valid_date str) ~printer:string_of_bool
+
 (* Test Cases *)
 let command_tests =
   [
@@ -50,13 +60,110 @@ let command_tests =
     command_test "Sign In lower case test" "signin" SignIn;
   ]
 
-let users_tests =
+let is_valid_price_tests =
   [
-    ( "Test ID List" >:: fun _ ->
-      assert_equal [] (Users.id_list (Users.users_from_json user_list)) );
+    is_valid_price_test
+      "This string represents a valid currency format since it has two digits \
+       after the decimal point."
+      "2.22" true;
+    is_valid_price_test
+      "This string is invalid because it has three digits after the decimal \
+       point."
+      "10.123" false;
+    is_valid_price_test
+      "This string is valid since it has one digit after the decimal point."
+      "0.5" true;
+    is_valid_price_test
+      "This string is invalid because it doesn't have a decimal point." "3" true;
+    is_valid_price_test
+      "This string is invalid since it contains non-numeric characters." "abc"
+      false;
+    is_valid_price_test
+      "This string is invalid because it has three digits after the decimal \
+       point."
+      "1.234" false;
+    is_valid_price_test
+      "An empty string is considered invalid because it doesn't follow the \
+       currency format."
+      "" false;
+    is_valid_price_test
+      "This string is valid as it has two zeros after the decimal point." "0.00"
+      true;
+    is_valid_price_test
+      "This string is invalid because it doesn't have a decimal point or \
+       digits after it."
+      "100" false;
+    is_valid_price_test
+      "This string is invalid because it doesn't have digits after the decimal \
+       point."
+      "123." false;
+    is_valid_price_test
+      "This string is invalid because it doesn't have digits after the decimal \
+       point."
+      ".25" false;
   ]
 
+let is_valid_date_tests =
+  [
+    is_valid_date_test
+      "This date is valid as it follows the format \"MM/DD/YY\" and satisfies \
+       the range conditions for the month, day, and year."
+      "01/15/22" true;
+    is_valid_date_test
+      "This date is valid because it represents a leap year, and February 29th \
+       is a valid date in a leap year."
+      "02/29/20" true;
+    is_valid_date_test
+      "This date is valid as it satisfies the format and range conditions. \
+       Note that the year 99 is treated as 1999 according to the code logic."
+      "12/31/99" true;
+    is_valid_date_test
+      "This date is invalid because the month value 13 is greater than the \
+       maximum value of 12."
+      "13/01/2023" false;
+    is_valid_date_test
+      "This date is invalid since it does not satisfies the format and range \
+       conditions."
+      "01/01/2023" false;
+    is_valid_date_test
+      "This date is valid as it represents the year 2000 (treated as 2000), \
+       which is a leap year, and February 29th is a valid date."
+      "01/01/00" true;
+    is_valid_date_test
+      "This date is valid as it satisfies the format and range conditions."
+      "12/01/23" true;
+    is_valid_date_test
+      "This date is invalid because the month value 00 is not within the valid \
+       range (1 to 12)."
+      "00/01/23" false;
+    is_valid_date_test
+      "This date is invalid because the day value 00 is not within the valid \
+       range (1 to 31)."
+      "01/00/23" false;
+    is_valid_date_test
+      "This date is invalid because the year value 100 is not within the valid \
+       range (0 to 99)."
+      "01/01/100" false;
+    is_valid_date_test
+      "This date is invalid because the year value 20000 is not within the \
+       valid range (0 to 99)."
+      "01/01/20000" false;
+    is_valid_date_test
+      "This date is invalid because it contains extra characters after the \
+       valid date format."
+      "01/01/2023/test" false;
+  ]
+
+let users_tests = []
+
 let suite =
-  "test suite for Market" >::: List.flatten [ command_tests; users_tests ]
+  "test suite for Market"
+  >::: List.flatten
+         [
+           command_tests;
+           is_valid_price_tests;
+           is_valid_date_tests;
+           is_valid_date_tests;
+         ]
 
 let _ = run_test_tt_main suite

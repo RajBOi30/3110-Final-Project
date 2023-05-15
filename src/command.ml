@@ -7,6 +7,7 @@ type command =
   | SignIn
   | SignOut
   | Like of int
+  | Purchase of int
   | Help
   | Post
   | Save of int
@@ -36,6 +37,12 @@ let parse input =
   | "signout" :: t -> SignOut
   | "sign" :: "out" :: t -> SignOut
   | "help" :: t -> Help
+  | "purchase" :: t -> begin
+      match t with
+      | [ x ] -> ( try Purchase (int_of_string x) with _ -> raise Malformed)
+      | [] -> Purchase 0
+      | _ -> raise Malformed
+    end
   | "post" :: t -> Post
   | "like" :: t -> begin
       match t with

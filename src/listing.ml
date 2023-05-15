@@ -113,14 +113,14 @@ let rec print_myfeed id acc (lst : f) =
         else print_myfeed id acc { feed = t }
 
 let like_post (i : int) (user_id : int) (feed : f) =
-  if user_id <> 0 then (
-    print_string ("\nYou have liked post " ^ string_of_int i ^ ".");
+
+  if user_id <> 0 then (print_endline ("You have liked post " ^ string_of_int i ^ ".");
     let update p =
       if p.listing_id = i then { p with likes = p.likes + 1 } else p
     in
-    let new_feed = List.map update feed.feed in
-    save_to_json { feed = new_feed })
-  else print_string "\nPlease sign in to like a listing"
+    let new_feed = { feed = List.map update feed.feed } in
+    save_to_json new_feed)
+  else print_string "\nPlease sign in to like a post."
 
 let is_date_format (s : string) : bool =
   try

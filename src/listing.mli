@@ -10,5 +10,5 @@ val feed_from_json : Yojson.Basic.t -> f
 val save_to_json : f -> unit
 val print_feed : string -> f -> string
 val print_myfeed : int -> string -> f -> string
-val like_post : int -> f -> unit
+val like_post : int -> int -> f -> unit
 val post : int -> string -> f -> unit

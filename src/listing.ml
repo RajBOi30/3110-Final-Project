@@ -12,6 +12,8 @@ type listing = {
   reviews : string list;
 }
 
+type max_listing_id = { mutable postid : int }
+
 let max_listing = { postid = 3 }
 let max_id = ref 3
 

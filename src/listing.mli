@@ -15,6 +15,13 @@ val get_listing : int -> f -> listing
 val get_desc : listing -> string
 val like_post : int -> f -> unit
 val get_title : listing -> string
+val get_listing_id : listing -> int
+val get_user_id : listing -> int
+val get_username : listing -> string
+val get_desc : listing -> string
+val get_price : listing -> string
+val get_date : listing -> string
+val get_likes : listing -> int
 val delete_listing : listing -> f -> unit
 val archive_listing : listing -> unit
 val like_post : int -> int -> f -> unit

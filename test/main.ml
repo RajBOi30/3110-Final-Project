@@ -3,6 +3,7 @@ open Market
 open Listing
 open Users
 open Command
+open Yojson.Basic.Util
 
 (** [pp_string s] pretty-prints string [s]. *)
 let pp_string s = "\"" ^ s ^ "\""
@@ -41,6 +42,12 @@ let is_valid_date_test (name : string) (str : string) (expected_output : bool) :
     test =
   name >:: fun _ ->
   assert_equal expected_output (is_valid_date str) ~printer:string_of_bool
+
+let test_file = Yojson.Basic.from_file "data/listings.json"
+
+let listing_from_json_test (name : string) (json : Yojson.Basic.t)
+    (expected_output : listing) : test =
+  name >:: fun _ -> assert_equal expected_output (listing_from_json json)
 
 (* Test Cases *)
 let command_tests =
@@ -154,6 +161,17 @@ let is_valid_date_tests =
       "01/01/2023/test" false;
   ]
 
+let test_file = Yojson.Basic.from_file "data/listings_TEST.json"
+
+let feed =
+  feed_from_json
+    (Yojson.Basic.from_file (data_dir_prefix ^ "listings_TEST.json"))
+
+let listing1 = get_listing 1 feed
+
+let listing_from_json_tests =
+  [ listing_from_json_test "test" test_file listing1 ]
+
 let users_tests = []
 
 let suite =
@@ -164,6 +182,7 @@ let suite =
            is_valid_price_tests;
            is_valid_date_tests;
            is_valid_date_tests;
+           listing_from_json_tests;
          ]
 
 let _ = run_test_tt_main suite

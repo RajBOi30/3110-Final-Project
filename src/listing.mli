@@ -19,3 +19,4 @@ val like_post : int -> int -> f -> unit
 val post : int -> string -> f -> unit
 val is_valid_price : string -> bool
 val is_valid_date : string -> bool
+val listing_from_json : Yojson.Basic.t -> listing

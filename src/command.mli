@@ -7,6 +7,7 @@ type command =
   | Like of int
   | Purchase of int
   | Help
+  | Post
 
 exception Empty
 (** Raised when an empty command is parsed. *)

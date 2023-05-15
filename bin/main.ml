@@ -7,9 +7,6 @@ open Yojson
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let data_dir_prefix_user = "data/userData" ^ Filename.dir_sep
 
-let feed =
-  feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
-
 let user_list =
   users_from_json (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
 
@@ -24,7 +21,7 @@ let user = { id = 0; username = "None" }
 
 (** [homepage ()] prints out every listing's details such as title, description,
     price, username, and date. *)
-let homepage () =
+let homepage feed =
   print_string (print_feed "\nHere are the latest listings:\n" feed)
 
 let signin () =
@@ -67,7 +64,7 @@ let exit () =
   print_string "Thanks for stopping by!\n";
   exit 0
 
-let my_listings () =
+let my_listings feed =
   print_string (print_myfeed user.id "\nHere are your current listings:\n" feed)
 
 let purchase i =
@@ -112,11 +109,15 @@ let help () =
      My Listings: Displays all of your listings (requires a signed in user)\n\
      Sign in: Allows the user to sign in with their username and password\n\
      Sign out: Propmts the user to sign out (requires a user is signed in)\n\
+     Post: Post a listing (requires a user is signed in)\n\
      Like: Like a post (requires a user is signed in)\n\n"
 
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)
 let rec welcome_page () =
+  let feed =
+    feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+  in
   print_string
     ("\n\n\
       Please enter a command ('help' provides a list of commands) to explore \
@@ -124,11 +125,11 @@ let rec welcome_page () =
   try
     match parse (read_line ()) with
     | Home ->
-        homepage ();
+        homepage feed;
         welcome_page ()
     | Quit -> exit ()
     | MyListing ->
-        my_listings ();
+        my_listings feed;
         welcome_page ()
     | SignIn ->
         signin ();
@@ -137,14 +138,15 @@ let rec welcome_page () =
         signout ();
         welcome_page ()
     | Like i ->
-        like_post i feed;
-        print_endline ("You have liked post " ^ string_of_int i ^ ".");
+        like_post i user.id feed;
         welcome_page ()
     | Help ->
         help ();
         welcome_page ()
     | Purchase i ->
         purchase i;
+    | Post ->
+        post user.id user.username feed;
         welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";

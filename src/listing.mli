@@ -15,3 +15,5 @@ val get_listing : int -> f -> listing
 val like_post : int -> f -> unit
 val get_title : listing -> string
 val delete_listing : listing -> f -> unit
+val like_post : int -> int -> f -> unit
+val post : int -> string -> f -> unit

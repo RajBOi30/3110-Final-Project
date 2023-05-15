@@ -9,6 +9,7 @@ type command =
   | Like of int
   | Purchase of int
   | Help
+  | Post
 
 exception Empty
 exception Malformed
@@ -39,6 +40,7 @@ let parse input =
       | [] -> Purchase 0
       | _ -> raise Malformed
     end
+  | "post" :: t -> Post
   | "like" :: t -> begin
       match t with
       | [ x ] -> ( try Like (int_of_string x) with _ -> raise Malformed)

@@ -7,11 +7,6 @@ open Yojson
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let data_dir_prefix_user = "data/userData" ^ Filename.dir_sep
 
-let user_list =
-  users_from_json (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
-
-let ids = id_list user_list
-
 type user_rec = {
   mutable id : int;
   mutable username : string;
@@ -25,6 +20,11 @@ let homepage feed =
   print_string (print_feed "\nHere are the latest listings:\n" feed)
 
 let signin () =
+  let user_list =
+    users_from_json
+      (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
+  in
+  let ids = id_list user_list in
   print_string "\nPlease enter your user id.\n\n";
   if user.id = 0 then
     let entered_id = read_line () in
@@ -71,7 +71,7 @@ let purchase i =
   let feed =
     feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
   in
-  if user.id = 3000 then begin
+  if user.id <> 0 then begin
     let post_id = ref i in
     if !post_id = 0 then (
       print_string
@@ -86,22 +86,22 @@ let purchase i =
       print_string "\n\nPlease enter the ID:";
       let input_id = read_line () in
       post_id := int_of_string input_id);
-
-    print_string
-      ("\n\nHere is the listing you are about to purchase:\n"
-      ^ single_listing (get_listing !post_id feed));
-    print_string
-      ("\n\nAre you sure you want to purchase this "
-      ^ get_title (get_listing !post_id feed)
-      ^ "? (Y or N)\n\n");
-
-    let decision = read_line () in
-    match decision with
-    | "Y" | "y" -> print_string "remove from json and decrement money"
-    | _ -> print_string "\n\nThe purchase was not made. Returning to Home.\n"
+    if String.starts_with "(*SOLD!*)" (get_desc (get_listing !post_id feed))
+    then print_string "\n\nThis item has already been sold!\n\n\n"
+    else (
+      print_string
+        ("\n\nHere is the listing you are about to purchase:\n"
+        ^ single_listing (get_listing !post_id feed));
+      print_string
+        ("\n\nAre you sure you want to purchase this "
+        ^ get_title (get_listing !post_id feed)
+        ^ "? (Y or N)\n\n");
+      let decision = read_line () in
+      match decision with
+      | "Y" | "y" -> archive_listing (get_listing !post_id feed)
+      | _ -> print_string "\n\nThe purchase was not made. Returning to Home.\n")
   end
-  else delete_listing (get_listing 1 feed) feed;
-  print_string "\n\n\nPlease sign in to make a purchase\n\n\n"
+  else print_string "\n\n\nPlease sign in to make a purchase\n\n\n"
 
 let help () =
   print_string
@@ -115,11 +115,38 @@ let help () =
      Post: Post a listing (requires a user is signed in)\n\
      Like: Like a post (requires a user is signed in)\n\n"
 
+let review () =
+  let feed =
+    feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+  in
+  if user.id <> 3000 then begin
+    print_string
+      "\n\n\nDo you know the ID of the post you want to review? (Y or N)\n\n";
+    let response = read_line () in
+    begin
+      match response with
+      | "Y" | "y" -> ()
+      | _ -> homepage feed
+    end;
+    print_string "\n\nPlease enter the ID of the post you want to review:\n";
+    let input_id = read_line () in
+    let post_id = int_of_string input_id in
+    print_string
+      ("Here are the current reviews for "
+      ^ get_title (get_listing post_id feed)
+      ^ ":")
+  end
+  else print_string "\n\n\nPlease sign in to make a review\n\n\n"
+
 (** [welcome_page ()] prompts the user for an input and matches it with a
     command. *)
 let rec welcome_page () =
   let feed =
     feed_from_json (Yojson.Basic.from_file (data_dir_prefix ^ "listings.json"))
+  in
+  let user_list =
+    users_from_json
+      (Yojson.Basic.from_file (data_dir_prefix_user ^ "users.json"))
   in
   print_string
     ("\n\n\
@@ -146,9 +173,35 @@ let rec welcome_page () =
     | Help ->
         help ();
         welcome_page ()
-    | Purchase i -> purchase i
+    | Purchase i ->
+        purchase i;
+        welcome_page ()
     | Post ->
         post user.id user.username feed;
+        welcome_page ()
+    | Reviews ->
+        review ();
+        welcome_page ()
+    | Save i ->
+        save_post i user.id user_list;
+        welcome_page ()
+    | SavedIDs ->
+        print_saved_ids user.id user_list;
+        welcome_page ()
+    | MySaved ->
+        print_saved_posts user.id user_list;
+        welcome_page ()
+    | Follow x ->
+        follow_user x user.id user_list;
+        welcome_page ()
+    | ViewFollowing ->
+        view_following user.id user_list;
+        welcome_page ()
+    | CreateAccount ->
+        create_account user_list;
+        welcome_page ()
+    | ViewUsers ->
+        view_users user_list;
         welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";

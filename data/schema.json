@@ -29,6 +29,12 @@
           },
           "likes": {
             "type": "integer"
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -39,10 +45,13 @@
           "description",
           "price",
           "date",
-          "likes"
+          "likes",
+          "reviews"
         ]
       }
     }
   },
-  "required": ["listings"]
+  "required": [
+    "listings"
+  ]
 }

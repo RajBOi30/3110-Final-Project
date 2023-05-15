@@ -11,6 +11,11 @@ type listing = {
   likes : int;
 }
 
+type max_listing_id = { mutable postid : int }
+
+let max_listing = { postid = 3 }
+let max_id = ref 3
+
 type f = { feed : listing list }
 
 (* Helper function for feed_from_json *)
@@ -114,7 +119,6 @@ let rec print_myfeed id acc (lst : f) =
         if get_user_id h == id then
           print_myfeed id (acc ^ single_listing h) { feed = t }
         else print_myfeed id acc { feed = t }
-
 
 let rec print_feed_by_id (id_list : int list) acc (lst : f) =
   match lst.feed with
@@ -268,6 +272,7 @@ let post (user_id : int) (username : string) (feed : f) =
     in
     let updated_feed = { feed = existing_feed.feed @ [ new_listing ] } in
     save_to_json updated_feed;
-
+    (* max_listing.postid <- new_listing.listing_id; *)
+    max_id := new_listing.listing_id;
     print_string "\nPost created successfully!\n")
   else print_string "\nYou need to sign in to create a post.\n"

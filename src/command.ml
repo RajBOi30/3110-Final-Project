@@ -65,4 +65,13 @@ let parse input =
   | "create" :: "account" :: t -> CreateAccount
   | "viewusers" :: t -> ViewUsers
   | "view" :: "users" :: t -> ViewUsers
+  | "save" :: t -> begin
+      match t with
+      | [ x ] -> ( try Save (int_of_string x) with _ -> raise Malformed)
+      | _ -> raise Malformed
+    end
+  | "my" :: "saved" :: t -> MySaved
+  | "saved" :: "ids" :: t -> SavedIDs
+  | "mysaved" :: t -> MySaved
+  | "savedids" :: t -> SavedIDs
   | _ -> raise Malformed

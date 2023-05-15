@@ -122,6 +122,11 @@ let user_following_test (name : string) (user_id : int) (lst : u)
     (expected_output : string list) : test =
   name >:: fun _ -> assert_equal expected_output (get_following user_id lst)
 
+let print_reviews_test (name : string) (listings : listing)
+    (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal ~printer:(fun x -> x) expected_output (print_reviews listings)
+
 (* Test Cases *)
 let command_tests =
   [
@@ -421,6 +426,10 @@ let get_listing_tests =
        Price: $22.22\n\
        Posted by: KevinLin21733 on 05/14/23\n\
        Likes: 4\n";
+    print_reviews_test "The reviews of listing1 is empty" listing1
+      "There are no reviews yet for this listing. Be the first to review!";
+    print_reviews_test "The reviews of listing2 is empty" listing2
+      "There are no reviews yet for this listing. Be the first to review!";
   ]
 
 let users_tests =

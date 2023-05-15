@@ -8,7 +8,8 @@
       "description": "Used Xbox 1 controller, broken left joystick",
       "price": "13.99",
       "date": "3/21/23",
-      "likes": 1
+      "likes": 1,
+      "reviews": []
     },
     {
       "listing id": 2,
@@ -18,7 +19,8 @@
       "description": "Used Plushie",
       "price": "4.00",
       "date": "2/2/23",
-      "likes": 0
+      "likes": 0,
+      "reviews": []
     },
     {
       "listing id": 3,
@@ -28,7 +30,8 @@
       "description": "-8.5 eyesight glasses",
       "price": "69.00",
       "date": "3/3/23",
-      "likes": 1
+      "likes": 1,
+      "reviews": []
     },
     {
       "listing id": 4,
@@ -38,7 +41,30 @@
       "description": "Blue iPhone 14 case",
       "price": "10.00",
       "date": "3/7/23",
-      "likes": 3
+      "likes": 3,
+      "reviews": []
+    },
+    {
+      "listing id": 5,
+      "user id": 2,
+      "username": "KevinLin21733",
+      "title": "Boba",
+      "description": "A singular Boba",
+      "price": "11.11",
+      "date": "05/14/23",
+      "likes": 1,
+      "reviews": []
+    },
+    {
+      "listing id": 6,
+      "user id": 2,
+      "username": "KevinLin21733",
+      "title": "Straw",
+      "description": "A straw for your boba",
+      "price": "22.22",
+      "date": "05/14/23",
+      "likes": 4,
+      "reviews": []
     }
   ]
 }

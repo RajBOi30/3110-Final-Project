@@ -352,6 +352,26 @@ let get_listing_tests =
        Price: $69.00\n\
        Posted by: Kaylin on 3/3/23\n\
        Likes: 1\n";
+    single_listing_test
+      "The single_listing prints out the listing4 on the terminal interface"
+      listing4
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Straw\n\
+       ID: 1\n\
+       Item Description: A straw for your boba\n\
+       Price: $22.22\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 4\n";
+    single_listing_test
+      "The single_listing prints out the listing4 on the terminal interface"
+      listing5
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Glass Mug\n\
+       ID: 2\n\
+       Item Description: Brand new Friends glass mug!\n\
+       Price: $7.80\n\
+       Posted by: Kaylin on 05/14/23\n\
+       Likes: 3\n";
     print_myfeed_test
       "The print_myfeed prints out the user 1's listing from feed on the \
        terminal interface"

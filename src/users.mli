@@ -2,6 +2,7 @@ type u
 type user
 
 val users_from_json : Yojson.Basic.t -> u
+val user_from_json : Yojson.Basic.t -> user
 val id_list : u -> int list
 val get_uname_from_id : int -> u -> string
 val get_pass_from_id : int -> u -> string
@@ -15,4 +16,4 @@ val view_users : u -> unit
 val save_to_users : u -> unit
 val update_user_listings : int -> int -> u -> unit
 val get_following : int -> u -> string list
-
+val to_yojson : user -> Yojson.Basic.t

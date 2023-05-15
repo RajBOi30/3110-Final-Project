@@ -23,15 +23,21 @@ let pp_list pp_elt lst =
   in
   "[" ^ pp_elts lst ^ "]"
 
-let data_dir_prefix = "data" ^ Filename.dir_sep
-let user_data_dir_prefix = "data/" ^ "userData" ^ Filename.dir_sep
-let listings = Yojson.Basic.from_file (data_dir_prefix ^ "listings.json")
-
 let user_list =
   users_from_json
     (Yojson.Basic.from_file
        ("data/userData" ^ Filename.dir_sep ^ "test_users.json"))
 
+let user1 =
+  user_from_json
+    (Yojson.Basic.from_file
+       ("data/userData" ^ Filename.dir_sep ^ "test_users.json"))
+
+let test_file = Yojson.Basic.from_file "data/listings_TEST.json"
+let feed = feed_from_json test_file
+let listing1 = get_listing 1 feed
+let listing2 = get_listing 2 feed
+let listing3 = get_listing 3 feed
 let ids = id_list user_list
 
 (* Helper Functions for Testing *)
@@ -126,6 +132,19 @@ let print_reviews_test (name : string) (listings : listing)
     (expected_output : string) : test =
   name >:: fun _ ->
   assert_equal ~printer:(fun x -> x) expected_output (print_reviews listings)
+
+let user_from_json_test (name : string) (json : Yojson.Basic.t)
+    (expected_output : user) : test =
+  name >:: fun _ -> assert_equal expected_output (user_from_json json)
+
+let to_yojson_test (name : string) (user : user)
+    (expected_output : Yojson.Basic.t) : test =
+  name >:: fun _ -> assert_equal expected_output (to_yojson user)
+
+let follow_user_test (name : string) (username : string) (user_id : int)
+    (users : u) (expected_output : unit) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (follow_user username user_id users)
 
 (* Test Cases *)
 let command_tests =
@@ -238,16 +257,6 @@ let is_valid_date_tests =
        valid date format."
       "01/01/2023/test" false;
   ]
-
-let test_file = Yojson.Basic.from_file "data/listings_TEST.json"
-
-let feed =
-  feed_from_json
-    (Yojson.Basic.from_file (data_dir_prefix ^ "listings_TEST.json"))
-
-let listing1 = get_listing 1 feed
-let listing2 = get_listing 2 feed
-let listing3 = get_listing 3 feed
 
 let get_listing_tests =
   [
@@ -470,6 +479,7 @@ let users_tests =
     user_following_test
       "Check that user 1's following list is correctly read in" 4 user_list
       [ "rajsinha999"; "kaylin" ];
+    user_from_json_test "Converts user JSON to user object" test_file user1;
   ]
 
 let suite =

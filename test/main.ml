@@ -121,6 +121,10 @@ let get_pass_from_id_test (name : string) (id : int) (lst : u)
     (expected_output : string) : test =
   name >:: fun _ -> assert_equal expected_output (get_pass_from_id id lst)
 
+let get_id_from_uname_test (name : string) (uname : string) (lst : u)
+    (expected_output : int) : test =
+  name >:: fun _ -> assert_equal expected_output (get_id_from_uname uname lst)
+
 let print_feed_test (name : string) (acc : string) (feed : f)
     (expected_output : string) : test =
   name >:: fun _ ->
@@ -677,6 +681,18 @@ let users_tests =
     get_pass_from_id_test
       "Test that user 4's password is correctly read in using their ID" 4
       user_list "oink";
+    get_id_from_uname_test
+      "Test that user 1's id can be found using their username" "RajSinha999"
+      user_list 1;
+    get_id_from_uname_test
+      "Test that user 2's id can be found using their username" "KevinLin21733"
+      user_list 2;
+    get_id_from_uname_test
+      "Test that user 3's id can be found using their username" "Kaylin"
+      user_list 3;
+    get_id_from_uname_test
+      "Test that user 4's id can be found using their username" "peppapig"
+      user_list 4;
     (*ID List Test*)
     id_list_test "Test that ID_list helper method functions correctly" user_list
       [ 4; 1; 2; 3 ];

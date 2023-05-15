@@ -6,6 +6,7 @@ val user_from_json : Yojson.Basic.t -> user
 val id_list : u -> int list
 val get_uname_from_id : int -> u -> string
 val get_pass_from_id : int -> u -> string
+val get_id_from_uname : string -> u -> int
 val save_post : int -> int -> u -> unit
 val print_saved_ids : int -> u -> unit
 val print_saved_posts : int -> u -> unit

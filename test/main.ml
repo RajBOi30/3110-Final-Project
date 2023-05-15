@@ -3,6 +3,8 @@ open Market
 open Listing
 open Users
 open Command
+open Yojson.Basic.Util
+
 
 (** [pp_string s] pretty-prints string [s]. *)
 let pp_string s = "\"" ^ s ^ "\""
@@ -41,6 +43,45 @@ let is_valid_date_test (name : string) (str : string) (expected_output : bool) :
     test =
   name >:: fun _ ->
   assert_equal expected_output (is_valid_date str) ~printer:string_of_bool
+
+
+let test_file = Yojson.Basic.from_file "data/listings.json"
+
+let get_listing_test (name : string) (int : int) (f : f)
+    (expected_output : listing) : test =
+  name >:: fun _ -> assert_equal expected_output (get_listing int f)
+
+let get_listing_id_test (name : string) (listing : listing)
+    (expected_output : int) : test =
+  name >:: fun _ -> assert_equal expected_output (get_listing_id listing)
+
+let get_user_id_test (name : string) (listing : listing) (expected_output : int)
+    : test =
+  name >:: fun _ -> assert_equal expected_output (get_user_id listing)
+
+let get_username_test (name : string) (listing : listing)
+    (expected_output : string) : test =
+  name >:: fun _ -> assert_equal expected_output (get_username listing)
+
+let get_title_test (name : string) (listing : listing)
+    (expected_output : string) : test =
+  name >:: fun _ -> assert_equal expected_output (get_title listing)
+
+let get_desc_test (name : string) (listing : listing) (expected_output : string)
+    : test =
+  name >:: fun _ -> assert_equal expected_output (get_desc listing)
+
+let get_price_test (name : string) (listing : listing)
+    (expected_output : string) : test =
+  name >:: fun _ -> assert_equal expected_output (get_price listing)
+
+let get_date_test (name : string) (listing : listing) (expected_output : string)
+    : test =
+  name >:: fun _ -> assert_equal expected_output (get_date listing)
+
+let get_likes_test (name : string) (listing : listing) (expected_output : int) :
+    test =
+  name >:: fun _ -> assert_equal expected_output (get_likes listing)
 
 (* Test Cases *)
 let command_tests =
@@ -154,6 +195,45 @@ let is_valid_date_tests =
       "01/01/2023/test" false;
   ]
 
+let test_file = Yojson.Basic.from_file "data/listings_TEST.json"
+
+let feed =
+  feed_from_json
+    (Yojson.Basic.from_file (data_dir_prefix ^ "listings_TEST.json"))
+
+let listing1 = get_listing 1 feed
+let listing2 = get_listing 2 feed
+
+let get_listing_tests =
+  [
+    get_listing_test "Gets the listing 1 from listing feed" 1 feed listing1;
+    get_listing_test "Gets the listing 2 from listing feed" 2 feed listing2;
+    get_listing_id_test "The listing_id of listing1 is 1" listing1 1;
+    get_listing_id_test "The listing_id of listing2 is 2" listing2 2;
+    get_user_id_test "The user_id of listing1 is 1" listing1 1;
+    get_user_id_test "The user_id of listing2 is 1" listing2 1;
+    get_username_test "The username of listing1 is \"RajSinha999\"" listing1
+      "RajSinha999";
+    get_username_test "The username of listing2 is \"RajSinha999\"" listing2
+      "RajSinha999";
+    get_title_test "The title of listing1 is \"Xbox Controller\"" listing1
+      "Xbox Controller";
+    get_title_test "The title of listing1 is \"Kirby Plushie\"" listing2
+      "Kirby Plushie";
+    get_desc_test
+      "The description of listing1 is \"Used Xbox 1 controller, broken left \
+       joystick\""
+      listing1 "Used Xbox 1 controller, broken left joystick";
+    get_desc_test "The description of listing2 is \"Used Plushie\"" listing2
+      "Used Plushie";
+    get_price_test "The price of listing1 is \"13.99\"" listing1 "13.99";
+    get_price_test "The price of listing2 is \"4.00\"" listing2 "4.00";
+    get_date_test "The date of listing1 is \"3/21/23\"" listing1 "3/21/23";
+    get_date_test "The date of listing2 is \"3/21/23\"" listing2 "2/2/23";
+    get_likes_test "The likes of listing1 is 1" listing1 1;
+    get_likes_test "The likes of listing1 is 0" listing2 0;
+  ]
+
 let users_tests = []
 
 let suite =
@@ -164,6 +244,7 @@ let suite =
            is_valid_price_tests;
            is_valid_date_tests;
            is_valid_date_tests;
+           get_listing_tests;
          ]
 
 let _ = run_test_tt_main suite

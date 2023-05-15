@@ -209,6 +209,18 @@ let rec welcome_page () =
     | MySaved ->
         print_saved_posts user.id user_list;
         welcome_page ()
+    | Follow x ->
+        follow_user x user.id user_list;
+        welcome_page ()
+    | ViewFollowing ->
+        view_following user.id user_list;
+        welcome_page ()
+    | CreateAccount ->
+        create_account user_list;
+        welcome_page ()
+    | ViewUsers ->
+        view_users user_list;
+        welcome_page ()
   with _ ->
     print_string "This command is invalid, or has not yet been implemented";
     welcome_page ()

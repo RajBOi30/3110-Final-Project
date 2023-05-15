@@ -163,25 +163,36 @@ let like_post (i : int) (user_id : int) (feed : f) =
   else print_string "\nPlease sign in to like a post."
 
 let is_valid_date (s : string) : bool =
-  try
+  let valid_format =
+    let len = String.length s in
+    len = 8
+    && s.[2] = '/'
+    && s.[5] = '/'
+    &&
+    let rec check_digits i =
+      if i >= len then true
+      else if i = 2 || i = 5 then check_digits (i + 1)
+      else if s.[i] >= '0' && s.[i] <= '9' then check_digits (i + 1)
+      else false
+    in
+    check_digits 0
+  in
+  if not valid_format then false
+  else
     let parts = String.split_on_char '/' s in
-    if List.length parts <> 3 then false
-    else
-      let month = int_of_string @@ List.nth parts 0 in
-      let day = int_of_string @@ List.nth parts 1 in
-      let year = int_of_string @@ List.nth parts 2 in
-      month >= 1 && month <= 12 && day >= 1
-      && (day
-         <=
-         match month with
-         | 2 ->
-             if year mod 4 = 0 && (year mod 100 <> 0 || year mod 400 = 0) then
-               29
-             else 28
-         | 4 | 6 | 9 | 11 -> 30
-         | _ -> 31)
-      && year >= 0 && year <= 99
-  with _ -> false
+    let month = int_of_string (List.nth parts 0) in
+    let day = int_of_string (List.nth parts 1) in
+    let year = int_of_string (List.nth parts 2) in
+    month >= 1 && month <= 12 && day >= 1
+    && (day
+       <=
+       match month with
+       | 2 ->
+           if year mod 4 = 0 && (year mod 100 <> 0 || year mod 400 = 0) then 29
+           else 28
+       | 4 | 6 | 9 | 11 -> 30
+       | _ -> 31)
+    && year >= 0 && year <= 99
 
 let is_valid_price (str : string) : bool =
   let rec has_valid_format (chars : char list) (decimalPointSeen : bool)

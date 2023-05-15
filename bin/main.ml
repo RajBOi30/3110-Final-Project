@@ -247,6 +247,12 @@ let rec welcome_page () =
     | ViewUsers ->
         view_users user_list;
         welcome_page ()
+    | SuggestedPost ->
+        suggested_post feed;
+        welcome_page ()
+    | SuggestedUser ->
+        suggested_user user.id user_list;
+        welcome_page ()
   with _ ->
     print_string
       "This command is invalid, please enter HELP for a list of commands.";

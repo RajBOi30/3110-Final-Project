@@ -17,3 +17,4 @@ val save_to_users : u -> unit
 val update_user_listings : int -> int -> u -> unit
 val get_following : int -> u -> string list
 val to_yojson : user -> Yojson.Basic.t
+val suggested_user : int -> u -> unit

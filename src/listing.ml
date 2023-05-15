@@ -323,3 +323,15 @@ let add_review listing rev =
       existing_feed.feed
   in
   save_to_json { feed = new_feed }
+
+let suggested_post (lst : f) =
+  match lst.feed with
+  | [] -> print_string "There are no posts available."
+  | posts ->
+      let seed = int_of_float (Unix.time ()) in
+      Random.init seed;
+      let random_post = List.nth posts (Random.int (List.length posts)) in
+      print_string
+        ("\nHere is a suggested post we think you'll like!\n"
+       ^ single_listing random_post ^ "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        )

@@ -18,6 +18,8 @@ type command =
   | ViewFollowing
   | CreateAccount
   | ViewUsers
+  | SuggestedPost
+  | SuggestedUser
 
 exception Empty
 exception Malformed
@@ -75,4 +77,8 @@ let parse input =
   | "saved" :: "ids" :: t -> SavedIDs
   | "mysaved" :: t -> MySaved
   | "savedids" :: t -> SavedIDs
+  | "suggestedpost" :: t -> SuggestedPost
+  | "suggested" :: "post" :: t -> SuggestedPost
+  | "suggesteduser" :: t -> SuggestedUser
+  | "suggested" :: "user" :: t -> SuggestedUser
   | _ -> raise Malformed

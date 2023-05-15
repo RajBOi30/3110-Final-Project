@@ -34,5 +34,5 @@ val print_reviews : listing -> string
 val add_review : listing -> string -> unit
 val listing_from_json : Yojson.Basic.t -> listing
 val print_feed_by_id : int list -> string -> f -> string
-val max_listing : max_listing_id
 val max_id : int ref
+val suggested_post : f -> unit

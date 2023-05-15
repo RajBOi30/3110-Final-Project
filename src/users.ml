@@ -233,3 +233,25 @@ let update_user_listings user_id listing_id { users } =
   in
   let updated_user_list = { users = updated_users } in
   save_to_users updated_user_list
+
+let suggested_user user_id { users } =
+  if user_id = 0 then print_string "Please sign in to get a user suggestion.\n"
+  else
+    match users with
+    | [] -> print_string "There are no users."
+    | users ->
+        let seed = int_of_float (Unix.time ()) in
+        Random.init seed;
+
+        (* Filter out the current user *)
+        let filtered_users =
+          List.filter (fun user -> user.user_id <> user_id) users
+        in
+
+        if filtered_users = [] then print_string "No other users available.\n"
+        else
+          let random_user =
+            List.nth filtered_users (Random.int (List.length filtered_users))
+          in
+          print_string
+            ("Here is a suggested user: " ^ random_user.username ^ "\n")

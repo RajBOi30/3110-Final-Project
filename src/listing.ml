@@ -160,7 +160,7 @@ let archive_listing (listing : listing) =
     with _ -> `Assoc [ ("listings", `List []) ]
   in
   let existing_feed = feed_from_json existing_json in
-  print_string (print_feed "ORIGINAL: " existing_feed);
+  print_string (print_feed "ORIGINAL: \n" existing_feed);
   let sold_function (post : listing) =
     match post = listing with
     | true ->
@@ -169,7 +169,7 @@ let archive_listing (listing : listing) =
           user_id = post.user_id;
           username = post.username;
           title = post.title ^ " (*SOLD!*)";
-          description = "(*SOLD!*)" ^ post.description;
+          description = "(*SOLD!*) " ^ post.description;
           price = post.price;
           date = post.date;
           likes = post.likes;
@@ -179,7 +179,7 @@ let archive_listing (listing : listing) =
   in
   let new_feed = List.map sold_function existing_feed.feed in
   let updated_feed = { feed = new_feed } in
-  print_string (print_feed "ORIGINAL: " updated_feed);
+  print_string (print_feed "\nUPDATED: \n" updated_feed);
   save_to_json updated_feed
 
 let like_post (i : int) (user_id : int) (feed : f) =

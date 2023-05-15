@@ -179,11 +179,18 @@ let archive_listing (listing : listing) =
 
 let like_post (i : int) (user_id : int) (feed : f) =
   if user_id <> 0 then (
-    print_endline ("You have liked post " ^ string_of_int i ^ ".");
+    let like_made = ref false in
     let update p =
-      if p.listing_id = i then { p with likes = p.likes + 1 } else p
+      if p.listing_id = i then begin
+        print_endline ("You have liked post " ^ string_of_int i ^ ".");
+        like_made := true;
+        { p with likes = p.likes + 1 }
+      end
+      else p
     in
     let new_feed = { feed = List.map update feed.feed } in
+    if !like_made = false then
+      print_string "\n\nNo post exists with that post ID. \n\n\n";
     save_to_json new_feed)
   else print_string "\nPlease sign in to like a post."
 

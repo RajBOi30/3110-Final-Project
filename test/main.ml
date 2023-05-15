@@ -458,8 +458,18 @@ let users_tests =
       user_list "oink";
     (*ID List Test*)
     id_list_test "Test that ID_list helper method functions correctly" user_list
-      [ 4; 1; 2; 3 ]
-    (*User Following Tests*);
+      [ 4; 1; 2; 3 ];
+    (*User Following Tests*)
+    user_following_test
+      "Check that user 1's following list is correctly read in" 1 user_list
+      [ "kevinlin21733"; "kaylin" ];
+    user_following_test
+      "Check that user 2's following list is correctly read in" 2 user_list [];
+    user_following_test
+      "Check that user 2's following list is correctly read in" 3 user_list [];
+    user_following_test
+      "Check that user 1's following list is correctly read in" 4 user_list
+      [ "rajsinha999"; "kaylin" ];
   ]
 
 let suite =

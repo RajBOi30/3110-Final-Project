@@ -10,6 +10,9 @@ type command =
   | Purchase of int
   | Help
   | Post
+  | Save of int
+  | MySaved
+  | SavedIDs
 
 exception Empty
 exception Malformed
@@ -46,4 +49,13 @@ let parse input =
       | [ x ] -> ( try Like (int_of_string x) with _ -> raise Malformed)
       | _ -> raise Malformed
     end
+  | "save" :: t -> begin
+      match t with
+      | [ x ] -> ( try Save (int_of_string x) with _ -> raise Malformed)
+      | _ -> raise Malformed
+    end
+  | "my" :: "saved" :: t -> MySaved
+  | "saved" :: "ids" :: t -> SavedIDs
+  | "mysaved" :: t -> MySaved
+  | "savedids" :: t -> SavedIDs
   | _ -> raise Malformed

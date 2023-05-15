@@ -8,6 +8,9 @@ type command =
   | Purchase of int
   | Help
   | Post
+  | Save of int
+  | MySaved
+  | SavedIDs
 
 exception Empty
 (** Raised when an empty command is parsed. *)

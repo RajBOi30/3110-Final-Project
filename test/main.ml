@@ -105,6 +105,14 @@ let print_myfeed_test (name : string) (id : int) (acc : string) (feed : f)
   name >:: fun _ ->
   assert_equal ~printer:(fun x -> x) expected_output (print_myfeed id acc feed)
 
+let print_feed_by_id_test (name : string) (id_list : int list) (acc : string)
+    (feed : f) (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal
+    ~printer:(fun x -> x)
+    expected_output
+    (print_feed_by_id id_list acc feed)
+
 let get_uname_test (name : string) (id : int) (lst : u)
     (expected_output : string) : test =
   name >:: fun _ -> assert_equal expected_output (get_uname_from_id id lst)
@@ -287,9 +295,13 @@ let get_listing_tests =
     get_listing_test "Gets the listing 1 from listing feed" 1 feed listing1;
     get_listing_test "Gets the listing 2 from listing feed" 2 feed listing2;
     get_listing_test "Gets the listing 3 from listing feed" 3 feed listing3;
+    get_listing_test "Gets the listing 1 from listing feed2" 1 feed2 listing4;
+    get_listing_test "Gets the listing 2 from listing feed2" 2 feed2 listing5;
     get_listing_id_test "The listing_id of listing1 is 1" listing1 1;
     get_listing_id_test "The listing_id of listing2 is 2" listing2 2;
     get_listing_id_test "The listing_id of listing3 is 3" listing3 3;
+    get_listing_id_test "The listing_id of listing4 is 1" listing4 1;
+    get_listing_id_test "The listing_id of listing5 is 2" listing5 2;
     get_user_id_test "The user_id of listing1 is 1" listing1 1;
     get_user_id_test "The user_id of listing2 is 1" listing2 1;
     get_user_id_test "The user_id of listing3 is 3" listing3 3;
@@ -298,11 +310,14 @@ let get_listing_tests =
     get_username_test "The username of listing2 is \"RajSinha999\"" listing2
       "RajSinha999";
     get_username_test "The username of listing3 is \"Kaylin\"" listing3 "Kaylin";
+    get_username_test "The username of listing1 is \"KevinLin21733\"" listing4
+      "KevinLin21733";
     get_title_test "The title of listing1 is \"Xbox Controller\"" listing1
       "Xbox Controller";
     get_title_test "The title of listing2 is \"Kirby Plushie\"" listing2
       "Kirby Plushie";
     get_title_test "The title of listing3 is \"Glasses\"" listing3 "Glasses";
+    get_title_test "The title of listing4 is \"Straw\"" listing4 "Straw";
     get_desc_test
       "The description of listing1 is \"Used Xbox 1 controller, broken left \
        joystick\""
@@ -311,9 +326,12 @@ let get_listing_tests =
       "Used Plushie";
     get_desc_test "The description of listing3 is \"-8.5 eyesight glasses\""
       listing3 "-8.5 eyesight glasses";
+    get_desc_test "The description of listing4 is \"A straw for your boba\""
+      listing4 "A straw for your boba";
     get_price_test "The price of listing1 is \"13.99\"" listing1 "13.99";
     get_price_test "The price of listing2 is \"4.00\"" listing2 "4.00";
     get_price_test "The price of listing3 is \"69.00\"" listing3 "69.00";
+    get_price_test "The price of listing4 is \"22.22\"" listing4 "22.22";
     get_date_test "The date of listing1 is \"3/21/23\"" listing1 "3/21/23";
     get_date_test "The date of listing2 is \"2/2/23\"" listing2 "2/2/23";
     get_date_test "The date of listing3 is \"3/3/23\"" listing3 "3/3/23";
@@ -454,6 +472,26 @@ let get_listing_tests =
        Posted by: peppapig on 10/20/23\n\
        Likes: 1\n";
     print_myfeed_test
+      "The print_myfeed prints out the user 4's listing from feed2 on the \
+       terminal interface"
+      2 "\nHere are your current listings:\n" feed2
+      "\n\
+       Here are your current listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Straw\n\
+       ID: 1\n\
+       Item Description: A straw for your boba\n\
+       Price: $22.22\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 4\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: t\n\
+       ID: 3\n\
+       Item Description: t\n\
+       Price: $11.1\n\
+       Posted by: KevinLin21733 on 11/11/11\n\
+       Likes: 1\n";
+    print_myfeed_test
       "The print_myfeed prints out the user 3's listing from feed on the \
        terminal interface"
       3 "\nHere are your current listings:\n" feed
@@ -473,6 +511,47 @@ let get_listing_tests =
        Price: $10.00\n\
        Posted by: Kaylin on 3/7/23\n\
        Likes: 3\n";
+    print_feed_by_id_test
+      "The feed prints out the feed of ID 1 and 3 on the terminal interface"
+      [ 1; 3 ] "" feed
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Xbox Controller\n\
+       ID: 1\n\
+       Item Description: Used Xbox 1 controller, broken left joystick\n\
+       Price: $13.99\n\
+       Posted by: RajSinha999 on 3/21/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Glasses\n\
+       ID: 3\n\
+       Item Description: -8.5 eyesight glasses\n\
+       Price: $69.00\n\
+       Posted by: Kaylin on 3/3/23\n\
+       Likes: 1\n";
+    print_feed_by_id_test
+      "The feed prints out the feed of IDs 2,4 and 5 on the terminal interface"
+      [ 2; 4; 5 ] "" feed
+      "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Kirby Plushie\n\
+       ID: 2\n\
+       Item Description: Used Plushie\n\
+       Price: $4.00\n\
+       Posted by: RajSinha999 on 2/2/23\n\
+       Likes: 0\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Phone Case\n\
+       ID: 4\n\
+       Item Description: Blue iPhone 14 case\n\
+       Price: $10.00\n\
+       Posted by: Kaylin on 3/7/23\n\
+       Likes: 3\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Boba\n\
+       ID: 5\n\
+       Item Description: A singular Boba\n\
+       Price: $11.11\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 1\n";
     print_feed_test
       "The print_feed prints out the feed on the terminal interface"
       "\nHere are the latest listings:\n" feed

@@ -1,0 +1,74 @@
+{
+    "listings": [
+        {
+            "listing id": 1,
+            "user id": 2,
+            "username": "KevinLin21733",
+            "title": "Straw",
+            "description": "A straw for your boba",
+            "price": "22.22",
+            "date": "05/14/23",
+            "likes": 4,
+            "reviews": []
+        },
+        {
+            "listing id": 2,
+            "user id": 3,
+            "username": "Kaylin",
+            "title": "Glass Mug",
+            "description": "Brand new Friends glass mug!",
+            "price": "7.80",
+            "date": "05/14/23",
+            "likes": 3,
+            "reviews": []
+        },
+        {
+            "listing id": 3,
+            "user id": 2,
+            "username": "KevinLin21733",
+            "title": "t",
+            "description": "t",
+            "price": "11.1",
+            "date": "11/11/11",
+            "likes": 1,
+            "reviews": []
+        },
+        {
+            "listing id": 4,
+            "user id": 4,
+            "username": "peppapig",
+            "title": "Makeup Mirror",
+            "description": "Unbroken handheld mirror for viewing your beautiful face.",
+            "price": "9.09",
+            "date": "10/20/23",
+            "likes": 1,
+            "reviews": []
+        },
+        {
+            "listing id": 5,
+            "user id": 3,
+            "username": "Kaylin",
+            "title": "Coffee (*SOLD!*)",
+            "description": "(*SOLD!*)Yummy and energizing for those late nights ",
+            "price": "4.99",
+            "date": "05/15/20",
+            "likes": 0,
+            "reviews": [
+                "yum!"
+            ]
+        },
+        {
+            "listing id": 6,
+            "user id": 3,
+            "username": "Kaylin",
+            "title": "Painting (*SOLD!*)",
+            "description": "(*SOLD!*)Pretty and colorful landscape by Bob Ross",
+            "price": "100.00",
+            "date": "06/20/22",
+            "likes": 0,
+            "reviews": [
+                "Gorgeous painting, arrived promptly."
+            ]
+        }
+    ]
+}

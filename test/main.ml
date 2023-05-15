@@ -30,9 +30,12 @@ let user_list =
 
 let test_file = Yojson.Basic.from_file "data/listings_TEST.json"
 let feed = feed_from_json test_file
+let feed2 = feed_from_json (Yojson.Basic.from_file "data/listings_TEST1.json")
 let listing1 = get_listing 1 feed
 let listing2 = get_listing 2 feed
 let listing3 = get_listing 3 feed
+let listing4 = get_listing 1 feed2
+let listing5 = get_listing 2 feed2
 let ids = id_list user_list
 
 (* Helper Functions for Testing *)
@@ -390,6 +393,47 @@ let get_listing_tests =
        Posted by: KevinLin21733 on 05/14/23\n\
        Likes: 4\n";
     print_myfeed_test
+      "The print_myfeed prints out the user 3's listing from feed2 on the \
+       terminal interface"
+      3 "\nHere are your current listings:\n" feed2
+      "\n\
+       Here are your current listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Glass Mug\n\
+       ID: 2\n\
+       Item Description: Brand new Friends glass mug!\n\
+       Price: $7.80\n\
+       Posted by: Kaylin on 05/14/23\n\
+       Likes: 3\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Coffee (*SOLD!*)\n\
+       ID: 5\n\
+       Item Description: (*SOLD!*)Yummy and energizing for those late nights \n\
+       Price: $4.99\n\
+       Posted by: Kaylin on 05/15/20\n\
+       Likes: 0\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Painting (*SOLD!*)\n\
+       ID: 6\n\
+       Item Description: (*SOLD!*)Pretty and colorful landscape by Bob Ross\n\
+       Price: $100.00\n\
+       Posted by: Kaylin on 06/20/22\n\
+       Likes: 0\n";
+    print_myfeed_test
+      "The print_myfeed prints out the user 4's listing from feed2 on the \
+       terminal interface"
+      4 "\nHere are your current listings:\n" feed2
+      "\n\
+       Here are your current listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Makeup Mirror\n\
+       ID: 4\n\
+       Item Description: Unbroken handheld mirror for viewing your beautiful \
+       face.\n\
+       Price: $9.09\n\
+       Posted by: peppapig on 10/20/23\n\
+       Likes: 1\n";
+    print_myfeed_test
       "The print_myfeed prints out the user 3's listing from feed on the \
        terminal interface"
       3 "\nHere are your current listings:\n" feed
@@ -456,6 +500,54 @@ let get_listing_tests =
        Price: $22.22\n\
        Posted by: KevinLin21733 on 05/14/23\n\
        Likes: 4\n";
+    print_feed_test
+      "The print_feed prints out the feed2 on the terminal interface"
+      "\nHere are the latest listings:\n" feed2
+      "\n\
+       Here are the latest listings:\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Straw\n\
+       ID: 1\n\
+       Item Description: A straw for your boba\n\
+       Price: $22.22\n\
+       Posted by: KevinLin21733 on 05/14/23\n\
+       Likes: 4\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Glass Mug\n\
+       ID: 2\n\
+       Item Description: Brand new Friends glass mug!\n\
+       Price: $7.80\n\
+       Posted by: Kaylin on 05/14/23\n\
+       Likes: 3\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: t\n\
+       ID: 3\n\
+       Item Description: t\n\
+       Price: $11.1\n\
+       Posted by: KevinLin21733 on 11/11/11\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Makeup Mirror\n\
+       ID: 4\n\
+       Item Description: Unbroken handheld mirror for viewing your beautiful \
+       face.\n\
+       Price: $9.09\n\
+       Posted by: peppapig on 10/20/23\n\
+       Likes: 1\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Coffee (*SOLD!*)\n\
+       ID: 5\n\
+       Item Description: (*SOLD!*)Yummy and energizing for those late nights \n\
+       Price: $4.99\n\
+       Posted by: Kaylin on 05/15/20\n\
+       Likes: 0\n\
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+       Title: Painting (*SOLD!*)\n\
+       ID: 6\n\
+       Item Description: (*SOLD!*)Pretty and colorful landscape by Bob Ross\n\
+       Price: $100.00\n\
+       Posted by: Kaylin on 06/20/22\n\
+       Likes: 0\n";
     print_reviews_test "The reviews of listing1 is empty" listing1
       "There are no reviews yet for this listing. Be the first to review!";
     print_reviews_test "The reviews of listing2 is empty" listing2

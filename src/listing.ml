@@ -80,8 +80,6 @@ let get_likes x = x.likes
 let get_listing (x : int) (lst : f) =
   List.find (fun a -> a.listing_id = x) lst.feed
 
-let archive_listing listing = ()
-
 let single_listing listing =
   let title = get_title listing in
   let listing_id = get_listing_id listing in
@@ -123,8 +121,36 @@ let delete_listing (listing : listing) (feed : f) =
     with _ -> `Assoc [ ("listings", `List []) ]
   in
   let existing_feed = feed_from_json existing_json in
-  print_string (print_feed " " existing_feed);
-  ()
+  let new_feed = List.filter (fun x -> x <> listing) existing_feed.feed in
+  let updated_feed = { feed = new_feed } in
+  save_to_json updated_feed
+
+let archive_listing (listing : listing) =
+  let existing_json =
+    try Yojson.Basic.from_file file_path
+    with _ -> `Assoc [ ("listings", `List []) ]
+  in
+  let existing_feed = feed_from_json existing_json in
+  print_string (print_feed "ORIGINAL: " existing_feed);
+  let sold_function (post : listing) =
+    match post = listing with
+    | true ->
+        {
+          listing_id = post.listing_id;
+          user_id = post.user_id;
+          username = post.username;
+          title = post.title ^ " (*SOLD!*)";
+          description = "(*SOLD!*)" ^ post.description;
+          price = post.price;
+          date = post.date;
+          likes = post.likes;
+        }
+    | _ -> post
+  in
+  let new_feed = List.map sold_function existing_feed.feed in
+  let updated_feed = { feed = new_feed } in
+  print_string (print_feed "ORIGINAL: " updated_feed);
+  save_to_json updated_feed
 
 let like_post (i : int) (user_id : int) (feed : f) =
   if user_id <> 0 then (

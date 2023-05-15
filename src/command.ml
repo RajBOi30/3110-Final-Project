@@ -54,6 +54,7 @@ let parse input =
       | [ x ] -> ( try Like (int_of_string x) with _ -> raise Malformed)
       | _ -> raise Malformed
     end
+  | "review" :: t | "reviews" :: t -> Reviews
   | "follow" :: t -> begin
       match t with
       | [ x ] -> ( try Follow x with _ -> raise Malformed)

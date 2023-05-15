@@ -42,7 +42,8 @@ let signin () =
          ^ user.username ^ "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))
       else
         print_string
-          "That username password combination does not match, returning to \
+          "\n\
+           That username password combination does not match, returning to \
            home screen.\n")
     else print_string "\nUser ID not found, returning to home screen.\n"
   else print_string "\nUser is already authenticated\n"
@@ -109,11 +110,22 @@ let help () =
      Here is a list of supported commands:\n\n\
      Home: Displays the homepage of the app with the most recent listings\n\
      Quit: Exits the app\n\
-     My Listings: Displays all of your listings (requires a signed in user)\n\
+     My Listings: Displays all of your listings (requires a user to be signed \
+     in)\n\
      Sign in: Allows the user to sign in with their username and password\n\
-     Sign out: Propmts the user to sign out (requires a user is signed in)\n\
+     Sign out: Propmts the user to sign out (requires a user to be signed in)\n\
      Post: Post a listing (requires a user is signed in)\n\
-     Like: Like a post (requires a user is signed in)\n\n"
+     Review: View and post reviews for any listing \n\
+     Purchase: Purchase an item that is currently on the market (requires a \
+     user to be signed in)\n\
+     Save:-\n\
+     My Saved:-\n\
+     Saved IDs:-\n\
+     Follow:-\n\
+     View Following:-\n\
+     Create Account:-\n\
+     View Users:-\n\
+     Like: Like a post (requires a user to be signed in)\n\n"
 
 let review () =
   let feed =
@@ -132,9 +144,27 @@ let review () =
     let input_id = read_line () in
     let post_id = int_of_string input_id in
     print_string
-      ("Here are the current reviews for "
+      ("\n\nHere are the current reviews for "
       ^ get_title (get_listing post_id feed)
-      ^ ":")
+      ^ ":\n\n");
+    print_string (print_reviews (get_listing post_id feed));
+    print_string "\n\nDo you want to add a review? (Y or N)\n\n";
+    let decision = read_line () in
+    match decision with
+    | "Y" | "y" -> (
+        print_string "\n\nType your review here:\n\n";
+        let rev = read_line () in
+        print_string
+          ("\nAre sure you want to add this review to "
+          ^ get_title (get_listing post_id feed)
+          ^ "?\n\n" ^ rev ^ "\n\n");
+        let answer = read_line () in
+        match answer with
+        | "Y" | "y" ->
+            add_review (get_listing post_id feed) rev;
+            print_string "\n\nYour review was added!\n\n\n"
+        | _ -> print_string "\n\nOk, disregarding the review\n\n\n")
+    | _ -> print_string "\n\nOk, returning to home.\n\n\n"
   end
   else print_string "\n\n\nPlease sign in to make a review\n\n\n"
 

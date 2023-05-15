@@ -93,8 +93,13 @@ let single_listing listing =
 let rec print_feed acc (lst : f) =
   match lst.feed with
   | [] -> acc
-  | [ h ] -> acc ^ single_listing h
-  | h :: t -> print_feed (acc ^ single_listing h) { feed = t }
+  | [ h ] ->
+      let listing_str = single_listing h in
+      acc ^ listing_str
+  | h :: t ->
+      let listing_str = single_listing h in
+      let new_acc = acc ^ listing_str in
+      print_feed new_acc { feed = t }
 
 let rec print_myfeed id acc (lst : f) =
   if id = 0 then "Please sign in to view listings"
@@ -108,14 +113,35 @@ let rec print_myfeed id acc (lst : f) =
         else print_myfeed id acc { feed = t }
 
 let like_post (i : int) (user_id : int) (feed : f) =
-  if user_id <> 0 then (
-    print_endline ("You have liked post " ^ string_of_int i ^ ".");
+
+  if user_id <> 0 then (print_endline ("You have liked post " ^ string_of_int i ^ ".");
     let update p =
       if p.listing_id = i then { p with likes = p.likes + 1 } else p
     in
     let new_feed = { feed = List.map update feed.feed } in
     save_to_json new_feed)
   else print_string "\nPlease sign in to like a post."
+
+let is_date_format (s : string) : bool =
+  try
+    let parts = String.split_on_char '/' s in
+    if List.length parts <> 3 then false
+    else
+      let month = int_of_string @@ List.nth parts 0 in
+      let day = int_of_string @@ List.nth parts 1 in
+      let year = int_of_string @@ List.nth parts 2 in
+      month >= 1 && month <= 12 && day >= 1
+      && (day
+         <=
+         match month with
+         | 2 ->
+             if year mod 4 = 0 && (year mod 100 <> 0 || year mod 400 = 0) then
+               29
+             else 28
+         | 4 | 6 | 9 | 11 -> 30
+         | _ -> 31)
+      && year >= 0 && year <= 99
+  with _ -> false
 
 let post (user_id : int) (username : string) (feed : f) =
   if user_id <> 0 then (
@@ -129,9 +155,14 @@ let post (user_id : int) (username : string) (feed : f) =
       "\nPlease enter the price of your post in the format \"0.00\":\n";
     let price = read_line () in
 
-    print_string
-      "\nPlease enter the date of your post in the format \"DD/MM/YY\":\n";
-    let date = read_line () in
+    let rec read_date () =
+      print_string
+        "\nPlease enter the date of your post in the format \"MM/DD/YY\":\n";
+      let date = read_line () in
+      if is_date_format date then date else read_date ()
+    in
+    let date = read_date () in
+
     let existing_json =
       try Yojson.Basic.from_file file_path
       with _ -> `Assoc [ ("listings", `List []) ]

@@ -1,3 +1,29 @@
+(** TEST PLAN *)
+
+(** To ensure the validity of our system, we employed a comprehensive testing
+    approach, combining both OUnit tests and manual testing. We extensively
+    tested the Users, Listing, and Command modules using OUnit and employed both
+    glass box testing and black box testing. For functions such as the date and
+    price validation, we used glass box testing to evaluate every possible
+    branch of the code. For users testing, we combined both methods of testing.
+    Tests for command.ml were mostly black-box tests, where we used edge cases
+    to test if various variations of the commands would work as expected. For
+    functions that directly wrote to JSON, we carefully examined the resulting
+    data files to confirm that the functions wrote to the expected fields.
+
+    For manual testing, we interacted with the command line UI, implemented in
+    bin/main.ml, to verify correct terminal output and proper program behavior,
+    ensuring no error throws or unexpected outcomes. Since the command line
+    interface is the primary user interaction point and many functions primarily
+    return (), it was more effective to manually test than to create OUnit tests
+    in this case.
+
+    Our testing approach combines black box, glass box, and thorough manual
+    testing to ensure the correctness of our program. The correctness of the
+    program is further supported by the fact that all created posts are
+    correctly displayed on the main feed with the associated data when observed
+    by any user. *)
+
 open OUnit2
 open Market
 open Listing

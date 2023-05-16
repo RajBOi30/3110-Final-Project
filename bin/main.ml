@@ -138,7 +138,10 @@ let help () =
      signed in*\n\
      VIEW FOLLOWING: View the current users you are following *must be signed \
      in* \n\
-     VIEW USERS: View a list of the current users on the platform."
+     VIEW USERS: View a list of the current users on the platform.\n\
+     SUGGESTED POST: Randomly generates a suggested post for you to view. \n\
+     SUGGESTED USER: Randomly generates a suggested user you may want to \
+     follow."
 
 let review () =
   let feed =
